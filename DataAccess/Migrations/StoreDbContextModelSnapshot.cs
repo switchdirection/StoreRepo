@@ -61,11 +61,13 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("CategoryName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("categoryname");
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categoryes");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.DeveloperEntity", b =>
@@ -77,15 +79,17 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DeveloperId"));
 
                     b.Property<string>("DeveloperName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("developername");
 
                     b.Property<string>("WebsiteUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("url");
 
                     b.HasKey("DeveloperId");
 
-                    b.ToTable("Developers");
+                    b.ToTable("Developers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.GameEntity", b =>
@@ -97,23 +101,29 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("description");
 
                     b.Property<double>("Price")
-                        .HasColumnType("double precision");
+                        .HasColumnType("double precision")
+                        .HasColumnName("price");
 
                     b.Property<decimal>("Rating")
-                        .HasColumnType("numeric");
+                        .HasColumnType("numeric")
+                        .HasColumnName("rating");
 
                     b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("releasedate");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Games");
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ImageEntity", b =>
@@ -129,13 +139,14 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("imageurl");
 
                     b.HasKey("ImageId");
 
                     b.HasIndex("GameIdId");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderEntity", b =>
@@ -147,14 +158,17 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderId"));
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("purchasedate");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("status");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric");
+                        .HasColumnType("numeric")
+                        .HasColumnName("totalorderprice");
 
                     b.Property<int?>("UserIdId")
                         .HasColumnType("integer");
@@ -163,7 +177,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserIdId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.PlatformEntity", b =>
@@ -175,11 +189,13 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PlatformId"));
 
                     b.Property<string>("PlatformName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("platformname");
 
                     b.HasKey("PlatformId");
 
-                    b.ToTable("Platforms");
+                    b.ToTable("Platform", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.PublisherEntity", b =>
@@ -191,15 +207,17 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PublisherId"));
 
                     b.Property<string>("PublisherName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("publishername");
 
                     b.Property<string>("WebsiteUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("url");
 
                     b.HasKey("PublisherId");
 
-                    b.ToTable("Publishers");
+                    b.ToTable("Publisher", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ReviewEntity", b =>
@@ -214,13 +232,17 @@ namespace DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("rating");
 
                     b.Property<DateTime>("ReviewDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("reviewdate");
 
                     b.Property<string>("ReviewText")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("reviewtext");
 
                     b.Property<int?>("UserIdId")
                         .HasColumnType("integer");
@@ -231,7 +253,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserIdId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Review", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UserEntity", b =>
@@ -243,19 +265,28 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreateAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("createat");
 
                     b.Property<string>("Email")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("email");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password");
 
                     b.Property<string>("Role")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("role");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("username");
 
                     b.Property<decimal>("WalletBalance")
                         .HasColumnType("numeric");
@@ -268,7 +299,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("Wishlistid")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.WishlistEntity", b =>
@@ -284,7 +315,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("WishlistId");
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("Wishlist", (string)null);
                 });
 
             modelBuilder.Entity("GameEntityOrderEntity", b =>

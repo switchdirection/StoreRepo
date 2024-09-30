@@ -11,9 +11,20 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<ImageEntity> builder)
         {
+            //Имя таблицы
+            builder.ToTable("Images");
+
+            //==========Свойства=======
             //Идентификатор изображения
             builder
                 .HasKey(i => i.ImageId);
+
+            builder
+                .Property(i => i.ImageUrl)
+                .HasColumnName("imageurl")
+                .IsRequired(true);
+
+            //===========Связи==========
             //Связь 1 ко многим, 1 игра может быть множество изображений
             builder
                 .HasOne(i => i.GameId)

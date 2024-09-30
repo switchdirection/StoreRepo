@@ -11,9 +11,30 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<OrderEntity> builder)
         {
+            //Имя таблицы
+            builder.ToTable("Orders");
+
+            //============Свойства=========
             //Идентификатор заказа
             builder
                 .HasKey(o => o.OrderId);
+
+            builder
+                .Property(o => o.TotalPrice)
+                .HasColumnName("totalorderprice")
+                .IsRequired(true);
+
+            builder
+                .Property(o => o.Status)
+                .HasColumnName("status")
+                .IsRequired(true);
+
+            builder
+                .Property(o => o.PurchaseDate)
+                .HasColumnName("purchasedate")
+                .IsRequired(true);
+
+            //============Связи=============
             //Связь 1 ко многим, 1 пользователь может иметь много заказов
             builder
                 .HasOne(o => o.UserId)

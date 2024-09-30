@@ -11,9 +11,21 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<CategoryEntity> builder)
         {
+            //Имя таблицы
+            builder.ToTable("Categories");
+
+            //===============Свойства================
             //Идентификатор категории
             builder
                 .HasKey(c => c.CategoryId);
+
+            
+            builder
+                .Property(c => c.CategoryName)
+                .HasColumnName("categoryname")
+                .IsRequired(true);
+
+            //================Связи===================
             //Связь многие ко многим, 1 игра может иметь множество категорий, 1 категория может подходить под множество игр
             builder
                 .HasMany(c => c.GameId)

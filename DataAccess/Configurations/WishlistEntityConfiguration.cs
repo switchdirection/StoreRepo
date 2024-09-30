@@ -12,10 +12,15 @@ namespace DataAccess.Configurations
         
         public void Configure(EntityTypeBuilder<WishlistEntity> builder) 
         {
+            //Имя таблицы
+            builder.ToTable("Wishlist");
+
+            //==============Свойства============
             //Идентификатор
             builder
                 .HasKey(w => w.WishlistId);
 
+            //==============Связи===============
             //Связь один ко многим, один пользователь - много желаемых игр
             builder
                 .HasOne(w => w.User)

@@ -12,7 +12,7 @@
         /// <summary>
         /// Наименование компании
         /// </summary>
-        public string? DeveloperName { get; set; }
+        public string? DeveloperName { get; set; } = default!;
         /// <summary>
         /// Ссылка на официальный сайт
         /// </summary>

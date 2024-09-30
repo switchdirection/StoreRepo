@@ -24,10 +24,10 @@
         /// <summary>
         /// Статус заказа
         /// </summary>
-        public string Status { get; set; } = default!;
+        public string Status { get; set; } = "В обработке";
         /// <summary>
         /// Дата заказа
         /// </summary>
-        public DateTime PurchaseDate { get; set;}
+        public DateTime PurchaseDate { get; set; } = default!;
     }
 }

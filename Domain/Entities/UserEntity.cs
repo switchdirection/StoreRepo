@@ -32,7 +32,7 @@
         /// <summary>
         /// Роль пользователя
         /// </summary>
-        public string? Role { get; set; }
+        public string? Role { get; set; } = "user";
         /// <summary>
         /// Списко желаемых игр
         /// </summary>

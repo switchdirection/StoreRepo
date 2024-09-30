@@ -11,9 +11,40 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<GameEntity> builder)
         {
+            //Имя таблицы
+            builder.ToTable("Games");
+
+            //=============Свойства============
             //Идентификатор игры
             builder
                 .HasKey(g => g.Id);
+
+            builder
+                .Property(g => g.Title)
+                .HasColumnName("title")
+                .IsRequired(true);
+
+            builder
+                .Property(g => g.Description)
+                .HasColumnName("description")
+                .IsRequired(false);
+
+            builder
+                .Property(g => g.Price)
+                .HasColumnName("price")
+                .IsRequired(true);
+
+            builder
+                .Property(g => g.ReleaseDate)
+                .HasColumnName("releasedate")
+                .IsRequired(true);
+
+            builder
+                .Property(g => g.Rating)
+                .HasColumnName("rating")
+                .IsRequired(true);
+
+            //==============Связи==============
             //Связь многие ко многим, 1 разработчик может выпустить несколько игр, 1 игра может быть выпущена несколькими разработчиками
             builder
                 .HasMany(g => g.DeveloperId)

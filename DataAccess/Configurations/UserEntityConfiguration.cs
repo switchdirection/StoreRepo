@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Infastructure.HashPassword;
 
 namespace DataAccess.Configurations
 {
@@ -53,6 +54,21 @@ namespace DataAccess.Configurations
             builder
                 .HasOne(u => u.Wishlist)
                 .WithOne(w => w.User).HasForeignKey<WishlistEntity>(w => w.UserId);
+
+            //==============Данные================
+            builder
+                .HasData(new UserEntity
+                {
+                    Id = 1,
+                    UserName = "swwtdirr",
+                    Email = "swwtdirrexamplemail@gmail.com",
+                    PasswordHash = HashPasswordFunction.HashPassword("swwtdirr"),
+                    CreateAt = DateTime.UtcNow,
+                    Role = "user",
+                    Wishlistid = 1,
+                    WalletBalance = 100
+
+                });
         }
     }
 }

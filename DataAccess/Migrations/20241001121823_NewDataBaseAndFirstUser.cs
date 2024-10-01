@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class NewDataBase : Migration
+    public partial class NewDataBaseAndFirstUser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -331,6 +331,16 @@ namespace DataAccess.Migrations
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Wishlist",
+                columns: new[] { "WishlistId", "UserId" },
+                values: new object[] { 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "createat", "email", "password", "role", "username", "WalletBalance", "Wishlistid" },
+                values: new object[] { 1, new DateTime(2024, 10, 1, 12, 18, 22, 765, DateTimeKind.Utc).AddTicks(5289), "swwtdirrexamplemail@gmail.com", "", "user", "swwtdirr", 100m, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryEntityGameEntity_GameIdId",

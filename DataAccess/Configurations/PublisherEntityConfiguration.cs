@@ -34,6 +34,27 @@ namespace DataAccess.Configurations
             builder
                 .HasMany(p => p.GameId)
                 .WithMany(g => g.PublisherId);
+
+            //==============Данные===========
+            builder
+                .HasData(new PublisherEntity
+                {
+                    PublisherId = 1,
+                    PublisherName = "Mojang Studios",
+                    WebsiteUrl = "https://www.minecraft.net/en-us/article/meet-mojang-studios"
+                },
+                new PublisherEntity
+                {
+                    PublisherId = 2,
+                    PublisherName = "Ubisoft Pune",
+                    WebsiteUrl = "https://www.ubisoft.com/en-us/company/careers/locations/pune"
+                },
+                new PublisherEntity
+                {
+                    PublisherId = 3,
+                    PublisherName = "Valve",
+                    WebsiteUrl = "https://www.valvesoftware.com/ru/"
+                });
         }
     }
 }

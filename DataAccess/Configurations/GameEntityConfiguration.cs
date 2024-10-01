@@ -73,6 +73,37 @@ namespace DataAccess.Configurations
             builder
                 .HasMany(g => g.Images)
                 .WithOne(i => i.GameId);
+
+
+            //=================Данные================
+            builder
+                .HasData(new GameEntity
+                {
+                    Id = 1,
+                    Title = "Need For Speed",
+                    Description = "Прикольные гоночки",
+                    Price = 14.99,
+                    ReleaseDate = DateTime.UtcNow.AddDays(25),
+                    Rating = 5
+                },
+                new GameEntity
+                {
+                    Id = 2,
+                    Title = "Assasin Creed",
+                    Description = "Что-то про мужика который прыгает по крышам",
+                    Price = 59.99,
+                    ReleaseDate = DateTime.UtcNow.AddDays(20),
+                    Rating = 4.7
+                },
+                new GameEntity
+                {
+                    Id = 3,
+                    Title = "Call Of Duty",
+                    Description = "Что-то про мужиков которые стреляют",
+                    Price = 14.99,
+                    ReleaseDate = DateTime.UtcNow.AddDays(11),
+                    Rating = 4.9
+                });
         }
     }
 }

@@ -34,6 +34,28 @@ namespace DataAccess.Configurations
             builder
                 .HasMany(d => d.GameId)
                 .WithMany(g => g.DeveloperId);
+
+
+            //===================Данные=============
+            builder
+                .HasData(new DeveloperEntity
+                {
+                    DeveloperId = 1,
+                    DeveloperName = "Ubisoft",
+                    WebsiteUrl = "https://www.ubisoft.com/ru-ru/"
+                },
+                new DeveloperEntity
+                {
+                    DeveloperId = 2,
+                    DeveloperName = "Electronic Arts",
+                    WebsiteUrl = "https://www.ea.com/ru-ru"
+                },
+                new DeveloperEntity
+                {
+                    DeveloperId = 3,
+                    DeveloperName = "Activision Blizzard",
+                    WebsiteUrl = "https://www.activisionblizzard.com/"
+                });
         }
     }
 }

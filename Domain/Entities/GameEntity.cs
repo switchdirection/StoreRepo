@@ -62,7 +62,7 @@ namespace Domain.Entities
         /// <summary>
         /// Рейтинг игры
         /// </summary>
-        public decimal Rating { get; set; } = 0;
+        public double Rating { get; set; } = 0;
 
     }
 }

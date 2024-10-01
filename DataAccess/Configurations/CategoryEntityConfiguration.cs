@@ -30,6 +30,24 @@ namespace DataAccess.Configurations
             builder
                 .HasMany(c => c.GameId)
                 .WithMany(g => g.CategoryId);
+
+            //=======================Данные======================
+            builder
+                .HasData(new CategoryEntity
+                {
+                    CategoryId = 1,
+                    CategoryName = "RPG"
+                },
+                new CategoryEntity
+                {
+                    CategoryId = 2,
+                    CategoryName = "Action RPG"
+                },
+                new CategoryEntity
+                {
+                    CategoryId = 3,
+                    CategoryName = "Rougelike"
+                });
         }
     }
 }

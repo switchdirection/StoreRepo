@@ -29,6 +29,29 @@ namespace DataAccess.Configurations
             builder
                 .HasMany(p => p.GameId)
                 .WithMany(g => g.PlatformId);
+
+            //====================Данные=================
+            builder
+                .HasData(new PlatformEntity
+                {
+                    PlatformId = 1,
+                    PlatformName = "Windows"
+                },
+                new PlatformEntity
+                {
+                    PlatformId = 2,
+                    PlatformName = "XBOX"
+                },
+                new PlatformEntity
+                {
+                    PlatformId = 3,
+                    PlatformName = "PlayStation"
+                },
+                new PlatformEntity
+                {
+                    PlatformId = 4,
+                    PlatformName = "Android & IOS"
+                });
         }
     }
 }

@@ -14,7 +14,7 @@ namespace DataAccess.Common
 
 
         public DbSet<UserEntity> Users { get; set; }
-        public DbSet<GameEntity> Games { get; set; }
+        /*public DbSet<GameEntity> Games { get; set; }
         public DbSet<CategoryEntity> Categoryes { get; set; }
         public DbSet<DeveloperEntity> Developers { get; set; }
         public DbSet<ImageEntity> Images { get; set; }
@@ -22,7 +22,7 @@ namespace DataAccess.Common
         public DbSet<PlatformEntity> Platforms { get; set; }
         public DbSet<PublisherEntity> Publishers { get; set; }
         public DbSet<ReviewEntity> Reviews { get; set; }
-        public DbSet<WishlistEntity> Wishlists { get; set; }
+        public DbSet<WishlistEntity> Wishlists { get; set; }*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

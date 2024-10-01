@@ -30,6 +30,15 @@ namespace DataAccess.Configurations
             builder
                 .HasMany(w => w.GameId)
                 .WithMany(g => g.WishlistId);
+
+            //==============Данные================
+            builder
+                .HasData(new WishlistEntity
+                {
+                    WishlistId = 1,
+                    UserId = 1,
+
+                });
         }
     }
 }

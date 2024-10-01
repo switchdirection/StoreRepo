@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20240930174228_NewDataBase")]
-    partial class NewDataBase
+    [Migration("20241001155525_AddSomeDataInTables")]
+    partial class AddSomeDataInTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,23 @@ namespace DataAccess.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "RPG"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Action RPG"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Rougelike"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.DeveloperEntity", b =>
@@ -93,6 +110,26 @@ namespace DataAccess.Migrations
                     b.HasKey("DeveloperId");
 
                     b.ToTable("Developers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            DeveloperId = 1,
+                            DeveloperName = "Ubisoft",
+                            WebsiteUrl = "https://www.ubisoft.com/ru-ru/"
+                        },
+                        new
+                        {
+                            DeveloperId = 2,
+                            DeveloperName = "Electronic Arts",
+                            WebsiteUrl = "https://www.ea.com/ru-ru"
+                        },
+                        new
+                        {
+                            DeveloperId = 3,
+                            DeveloperName = "Activision Blizzard",
+                            WebsiteUrl = "https://www.activisionblizzard.com/"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.GameEntity", b =>
@@ -111,8 +148,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("price");
 
-                    b.Property<decimal>("Rating")
-                        .HasColumnType("numeric")
+                    b.Property<double>("Rating")
+                        .HasColumnType("double precision")
                         .HasColumnName("rating");
 
                     b.Property<DateTime>("ReleaseDate")
@@ -127,6 +164,35 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Games", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Прикольные гоночки",
+                            Price = 14.99,
+                            Rating = 5.0,
+                            ReleaseDate = new DateTime(2024, 10, 26, 15, 55, 25, 198, DateTimeKind.Utc).AddTicks(5270),
+                            Title = "Need For Speed"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Что-то про мужика который прыгает по крышам",
+                            Price = 59.990000000000002,
+                            Rating = 4.7000000000000002,
+                            ReleaseDate = new DateTime(2024, 10, 21, 15, 55, 25, 198, DateTimeKind.Utc).AddTicks(5280),
+                            Title = "Assasin Creed"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Что-то про мужиков которые стреляют",
+                            Price = 14.99,
+                            Rating = 4.9000000000000004,
+                            ReleaseDate = new DateTime(2024, 10, 12, 15, 55, 25, 198, DateTimeKind.Utc).AddTicks(5283),
+                            Title = "Call Of Duty"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.ImageEntity", b =>
@@ -199,6 +265,28 @@ namespace DataAccess.Migrations
                     b.HasKey("PlatformId");
 
                     b.ToTable("Platform", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            PlatformId = 1,
+                            PlatformName = "Windows"
+                        },
+                        new
+                        {
+                            PlatformId = 2,
+                            PlatformName = "XBOX"
+                        },
+                        new
+                        {
+                            PlatformId = 3,
+                            PlatformName = "PlayStation"
+                        },
+                        new
+                        {
+                            PlatformId = 4,
+                            PlatformName = "Android & IOS"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.PublisherEntity", b =>
@@ -221,6 +309,26 @@ namespace DataAccess.Migrations
                     b.HasKey("PublisherId");
 
                     b.ToTable("Publisher", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            PublisherId = 1,
+                            PublisherName = "Mojang Studios",
+                            WebsiteUrl = "https://www.minecraft.net/en-us/article/meet-mojang-studios"
+                        },
+                        new
+                        {
+                            PublisherId = 2,
+                            PublisherName = "Ubisoft Pune",
+                            WebsiteUrl = "https://www.ubisoft.com/en-us/company/careers/locations/pune"
+                        },
+                        new
+                        {
+                            PublisherId = 3,
+                            PublisherName = "Valve",
+                            WebsiteUrl = "https://www.valvesoftware.com/ru/"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.ReviewEntity", b =>
@@ -303,6 +411,19 @@ namespace DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreateAt = new DateTime(2024, 10, 1, 15, 55, 25, 585, DateTimeKind.Utc).AddTicks(7773),
+                            Email = "swwtdirrexamplemail@gmail.com",
+                            PasswordHash = "$2a$11$okuo4Of2szf//qdPip3U4.3BwZIZt2kcoRe72KmWNgYgL3jgjYmpy",
+                            Role = "user",
+                            UserName = "swwtdirr",
+                            WalletBalance = 100m,
+                            Wishlistid = 1
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.WishlistEntity", b =>
@@ -319,6 +440,13 @@ namespace DataAccess.Migrations
                     b.HasKey("WishlistId");
 
                     b.ToTable("Wishlist", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            WishlistId = 1,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("GameEntityOrderEntity", b =>

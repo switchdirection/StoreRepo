@@ -14,11 +14,7 @@ namespace StoreRepo
             builder.Services.AddControllersWithViews();
 
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<StoreDbContext>(options =>
-            {
-                options.UseNpgsql(connectionString);
-            });
+            StoreRepoComponentRegister.AddComponents(builder.Services, builder.Configuration);
 
             //StoreRepoComponentRegister.AddComponents(builder.Services, builder.Configuration);
 

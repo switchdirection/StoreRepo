@@ -42,7 +42,7 @@ namespace DataAccess.Configurations
             //Связь многие ко многим, 1 заказ может включать множество игр, 1 игра может быть включена во множество заказов
             builder
                 .HasMany(o => o.GameId)
-                .WithMany(g => g.OrderId);
+                .WithMany(g => g.Orders);
         }
     }
 }

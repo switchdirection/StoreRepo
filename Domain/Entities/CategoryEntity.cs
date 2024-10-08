@@ -16,6 +16,6 @@
         /// <summary>
         /// Список игр
         /// </summary>
-        public GameEntity[]? GameId { get; set; }
+        public List<GameEntity> GameId { get; set; } = new List<GameEntity>();
     }
 }

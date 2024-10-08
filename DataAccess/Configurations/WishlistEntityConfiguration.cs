@@ -29,7 +29,7 @@ namespace DataAccess.Configurations
             //Связь многие ко многим, разные списки могут содержать 1 игру, и наоборот
             builder
                 .HasMany(w => w.GameId)
-                .WithMany(g => g.WishlistId);
+                .WithMany(g => g.Wishlists);
 
             //==============Данные================
             builder

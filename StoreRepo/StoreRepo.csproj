@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComponentRegister\ComponentRegister.csproj" />
-    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\Contraccts\Contracts.csproj" />
   </ItemGroup>
 
 </Project>

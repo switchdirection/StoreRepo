@@ -1,8 +1,12 @@
-﻿@{
+﻿@using Contracts.Games;
+@model ShortGameList;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>Id = @Model.Id<br />Name = @Model.Title<br />Category = @Model.ImageUrl<br />Price = @Model.Price</p>    
 </div>

@@ -30,35 +30,35 @@ namespace Domain.Entities
         /// <summary>
         /// Идентификатор разработчика
         /// </summary>
-        public DeveloperEntity[]? DeveloperId { get; set; } = [];
+        public List<DeveloperEntity> Developers { get; set; } = new List<DeveloperEntity>();
         /// <summary>
         /// Идентификатор издателя
         /// </summary>
-        public PublisherEntity[]? PublisherId { get; set; } = [];
+        public List<PublisherEntity> Publishers { get; set; } = new List<PublisherEntity>();
         /// <summary>
         /// Идентификатор заказа
         /// </summary>
-        public OrderEntity[]? OrderId { get; set; } = [];
+        public List<OrderEntity> Orders { get; set; } = new List<OrderEntity>();
         /// <summary>
         /// Категории игры
         /// </summary>
-        public CategoryEntity[]? CategoryId { get; set; } = [];
+        public List<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
         /// <summary>
         /// Платформы на которых игра будет доступна
         /// </summary>
-        public PlatformEntity[]? PlatformId { get; set; } = [];
+        public List<PlatformEntity> Platforms { get; set; } = new List<PlatformEntity>();
         /// <summary>
         /// Список избранных игр
         /// </summary>
-        public WishlistEntity[]? WishlistId { get; set; } = [];
+        public List<WishlistEntity> Wishlists { get; set; } = new List<WishlistEntity>();
         /// <summary>
         /// Отзывы на игру
         /// </summary>
-        public ReviewEntity[]? ReviewId { get; set; } = [];
+        public List<ReviewEntity> ReviewId { get; set; } = new List<ReviewEntity>();
         /// <summary>
         /// Изображения игры
         /// </summary>
-        public ImageEntity[]? Images { get; set; } = [];
+        public List<ImageEntity> Images { get; set; } = new List<ImageEntity>();
         /// <summary>
         /// Рейтинг игры
         /// </summary>

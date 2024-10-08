@@ -33,7 +33,7 @@ namespace DataAccess.Configurations
             //Связь многие ко многим, 1 издатель может выпустить много игр, и 1 игра может быть выпущена несколькими издателями
             builder
                 .HasMany(p => p.GameId)
-                .WithMany(g => g.PublisherId);
+                .WithMany(g => g.Publishers);
 
             //==============Данные===========
             builder

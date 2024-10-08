@@ -29,7 +29,7 @@ namespace DataAccess.Configurations
             //Связь многие ко многим, 1 игра может иметь множество категорий, 1 категория может подходить под множество игр
             builder
                 .HasMany(c => c.GameId)
-                .WithMany(g => g.CategoryId);
+                .WithMany(g => g.Categories);
 
             //=======================Данные======================
             builder

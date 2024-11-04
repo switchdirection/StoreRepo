@@ -1,9 +1,10 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Common
 {
-    public class StoreDbContext : DbContext
+    public class StoreDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
     {
         public StoreDbContext(DbContextOptions<StoreDbContext> options) : base(options)
         {

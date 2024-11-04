@@ -21,13 +21,12 @@ namespace DataAccess.Configurations
 
             builder
                 .Property(i => i.ImageUrl)
-                .HasColumnName("imageurl")
-                .IsRequired(true);
+                .HasColumnName("imageurl");
 
             //===========Связи==========
             //Связь 1 ко многим, 1 игра может быть множество изображений
             builder
-                .HasOne(i => i.GameId)
+                .HasOne(i => i.Game)
                 .WithMany(g => g.Images);
         }
     }

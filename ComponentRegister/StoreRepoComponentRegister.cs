@@ -12,6 +12,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Category.Repository;
 using Application.Category.Services;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Application.Authentification;
+using Application.Images.Services;
+using Application.Images.Repositories;
+using DataAccess.Images;
 
 namespace ComponentRegister
 {
@@ -22,6 +28,12 @@ namespace ComponentRegister
     {
         public static void AddComponents(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<StoreDbContext>()
+                .AddDefaultTokenProviders();
+
+            
+
             RegisterRepositories(services, configuration);
             RegisterServices(services, configuration);
             RegisterMapper(services);
@@ -37,12 +49,15 @@ namespace ComponentRegister
 
             services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
         }
 
         public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<IAuthentificationService, AuthentificationService>();
             services.AddScoped<IGamesService, GameService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IImageService, ImageService>();
 
         }
 
@@ -51,6 +66,7 @@ namespace ComponentRegister
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new GameMapperProfile());
+                mc.AddProfile(new CategoryMapperProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();

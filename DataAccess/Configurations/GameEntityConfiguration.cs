@@ -72,7 +72,7 @@ namespace DataAccess.Configurations
             //Связь 1 ко многим, 1 игра может включать множество картинок 
             builder
                 .HasMany(g => g.Images)
-                .WithOne(i => i.GameId);
+                .WithOne(i => i.Game);
 
 
             //=================Данные================

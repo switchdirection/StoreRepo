@@ -17,20 +17,20 @@ namespace DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("CategoryEntityGameEntity", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("CategoriesCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<int>("GameIdId")
                         .HasColumnType("integer");
 
-                    b.HasKey("CategoryId", "GameIdId");
+                    b.HasKey("CategoriesCategoryId", "GameIdId");
 
                     b.HasIndex("GameIdId");
 
@@ -39,17 +39,116 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DeveloperEntityGameEntity", b =>
                 {
-                    b.Property<int>("DeveloperId")
+                    b.Property<int>("DevelopersDeveloperId")
                         .HasColumnType("integer");
 
                     b.Property<int>("GameIdId")
                         .HasColumnType("integer");
 
-                    b.HasKey("DeveloperId", "GameIdId");
+                    b.HasKey("DevelopersDeveloperId", "GameIdId");
 
                     b.HasIndex("GameIdId");
 
                     b.ToTable("DeveloperEntityGameEntity");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicationRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("TelegramChatId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CategoryEntity", b =>
@@ -141,6 +240,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("description");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<double>("Price")
                         .HasColumnType("double precision")
                         .HasColumnName("price");
@@ -152,6 +254,9 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("releasedate");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -167,27 +272,33 @@ namespace DataAccess.Migrations
                         {
                             Id = 1,
                             Description = "Прикольные гоночки",
+                            IsDeleted = false,
                             Price = 14.99,
                             Rating = 5.0,
-                            ReleaseDate = new DateTime(2024, 10, 26, 15, 55, 25, 198, DateTimeKind.Utc).AddTicks(5270),
+                            ReleaseDate = new DateTime(2024, 11, 29, 14, 15, 7, 913, DateTimeKind.Utc).AddTicks(8497),
+                            StockQuantity = 0,
                             Title = "Need For Speed"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Что-то про мужика который прыгает по крышам",
+                            IsDeleted = false,
                             Price = 59.990000000000002,
                             Rating = 4.7000000000000002,
-                            ReleaseDate = new DateTime(2024, 10, 21, 15, 55, 25, 198, DateTimeKind.Utc).AddTicks(5280),
+                            ReleaseDate = new DateTime(2024, 11, 24, 14, 15, 7, 913, DateTimeKind.Utc).AddTicks(8506),
+                            StockQuantity = 0,
                             Title = "Assasin Creed"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Что-то про мужиков которые стреляют",
+                            IsDeleted = false,
                             Price = 14.99,
                             Rating = 4.9000000000000004,
-                            ReleaseDate = new DateTime(2024, 10, 12, 15, 55, 25, 198, DateTimeKind.Utc).AddTicks(5283),
+                            ReleaseDate = new DateTime(2024, 11, 15, 14, 15, 7, 913, DateTimeKind.Utc).AddTicks(8509),
+                            StockQuantity = 0,
                             Title = "Call Of Duty"
                         });
                 });
@@ -200,7 +311,14 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ImageId"));
 
-                    b.Property<int?>("GameIdId")
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("GameId")
                         .HasColumnType("integer");
 
                     b.Property<string>("ImageUrl")
@@ -208,11 +326,37 @@ namespace DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("imageurl");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("ImageId");
 
-                    b.HasIndex("GameIdId");
+                    b.HasIndex("GameId");
 
                     b.ToTable("Images", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.NotificationChannel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ApplicationUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("NotificationChannel");
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderEntity", b =>
@@ -413,9 +557,9 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            CreateAt = new DateTime(2024, 10, 1, 15, 55, 25, 585, DateTimeKind.Utc).AddTicks(7773),
+                            CreateAt = new DateTime(2024, 11, 4, 14, 15, 8, 26, DateTimeKind.Utc).AddTicks(8725),
                             Email = "swwtdirrexamplemail@gmail.com",
-                            PasswordHash = "$2a$11$okuo4Of2szf//qdPip3U4.3BwZIZt2kcoRe72KmWNgYgL3jgjYmpy",
+                            PasswordHash = "$2a$11$pJOa2qiiOopsX0K/nGa7CukOT704/9ZE7pG6wg15En3zjdKLkG3Jm",
                             Role = "user",
                             UserName = "swwtdirr",
                             WalletBalance = 100m,
@@ -451,12 +595,12 @@ namespace DataAccess.Migrations
                     b.Property<int>("GameIdId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("OrderId")
+                    b.Property<int>("OrdersOrderId")
                         .HasColumnType("integer");
 
-                    b.HasKey("GameIdId", "OrderId");
+                    b.HasKey("GameIdId", "OrdersOrderId");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrdersOrderId");
 
                     b.ToTable("GameEntityOrderEntity");
                 });
@@ -466,12 +610,12 @@ namespace DataAccess.Migrations
                     b.Property<int>("GameIdId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PlatformId")
+                    b.Property<int>("PlatformsPlatformId")
                         .HasColumnType("integer");
 
-                    b.HasKey("GameIdId", "PlatformId");
+                    b.HasKey("GameIdId", "PlatformsPlatformId");
 
-                    b.HasIndex("PlatformId");
+                    b.HasIndex("PlatformsPlatformId");
 
                     b.ToTable("GameEntityPlatformEntity");
                 });
@@ -481,12 +625,12 @@ namespace DataAccess.Migrations
                     b.Property<int>("GameIdId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PublisherId")
+                    b.Property<int>("PublishersPublisherId")
                         .HasColumnType("integer");
 
-                    b.HasKey("GameIdId", "PublisherId");
+                    b.HasKey("GameIdId", "PublishersPublisherId");
 
-                    b.HasIndex("PublisherId");
+                    b.HasIndex("PublishersPublisherId");
 
                     b.ToTable("GameEntityPublisherEntity");
                 });
@@ -496,21 +640,124 @@ namespace DataAccess.Migrations
                     b.Property<int>("GameIdId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("WishlistId")
+                    b.Property<int>("WishlistsWishlistId")
                         .HasColumnType("integer");
 
-                    b.HasKey("GameIdId", "WishlistId");
+                    b.HasKey("GameIdId", "WishlistsWishlistId");
 
-                    b.HasIndex("WishlistId");
+                    b.HasIndex("WishlistsWishlistId");
 
                     b.ToTable("GameEntityWishlistEntity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("CategoryEntityGameEntity", b =>
                 {
                     b.HasOne("Domain.Entities.CategoryEntity", null)
                         .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CategoriesCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -525,7 +772,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Domain.Entities.DeveloperEntity", null)
                         .WithMany()
-                        .HasForeignKey("DeveloperId")
+                        .HasForeignKey("DevelopersDeveloperId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -538,11 +785,18 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Entities.ImageEntity", b =>
                 {
-                    b.HasOne("Domain.Entities.GameEntity", "GameId")
+                    b.HasOne("Domain.Entities.GameEntity", "Game")
                         .WithMany("Images")
-                        .HasForeignKey("GameIdId");
+                        .HasForeignKey("GameId");
 
-                    b.Navigation("GameId");
+                    b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("Domain.Entities.NotificationChannel", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany("NotificationChannels")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderEntity", b =>
@@ -590,7 +844,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("Domain.Entities.OrderEntity", null)
                         .WithMany()
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("OrdersOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -605,7 +859,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("Domain.Entities.PlatformEntity", null)
                         .WithMany()
-                        .HasForeignKey("PlatformId")
+                        .HasForeignKey("PlatformsPlatformId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -620,7 +874,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("Domain.Entities.PublisherEntity", null)
                         .WithMany()
-                        .HasForeignKey("PublisherId")
+                        .HasForeignKey("PublishersPublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -635,9 +889,65 @@ namespace DataAccess.Migrations
 
                     b.HasOne("Domain.Entities.WishlistEntity", null)
                         .WithMany()
-                        .HasForeignKey("WishlistId")
+                        .HasForeignKey("WishlistsWishlistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("NotificationChannels");
                 });
 
             modelBuilder.Entity("Domain.Entities.GameEntity", b =>

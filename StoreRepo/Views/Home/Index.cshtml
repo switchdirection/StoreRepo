@@ -8,5 +8,8 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <p>Id = @Model.Id<br />Name = @Model.Title<br />Category = @Model.ImageUrl<br />Price = @Model.Price</p>    
+   @*  <p>Id = @Model.Id<br />Name = @Model.Title<br />Category = @foreach (var cat in @Model.Categories)
+        {
+            <span>@cat.CategoryName </span>
+        }<br />Price = @Model.Price</p> *@
 </div>

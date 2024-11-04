@@ -2,6 +2,7 @@
 using Contracts.Games;
 using Domain;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Reflection.Metadata;
 
 namespace Infastructure.Mapper
@@ -11,6 +12,7 @@ namespace Infastructure.Mapper
         public GameMapperProfile()
         {
             CreateMap<GameEntity, ShortGameList>();
+            CreateMap<ShortGameList, GameEntity>();
         }
     }
 }

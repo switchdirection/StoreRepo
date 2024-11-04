@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     /// <summary>
     /// Игра
@@ -23,6 +21,11 @@ namespace Domain.Entities
         /// Цена за единицу
         /// </summary>
         public double Price { get; set; } = 0;
+
+        /// <summary>
+        /// Количество экземпляров игры в наличии
+        /// </summary>
+        public int StockQuantity { get; set; }
         /// <summary>
         /// Дата выпуска
         /// </summary>
@@ -58,11 +61,15 @@ namespace Domain.Entities
         /// <summary>
         /// Изображения игры
         /// </summary>
-        public List<ImageEntity> Images { get; set; } = new List<ImageEntity>();
+        public ICollection<ImageEntity> Images { get; set; } = [];
         /// <summary>
         /// Рейтинг игры
         /// </summary>
         public double Rating { get; set; } = 0;
+        /// <summary>
+        /// Признак удалён ли товар
+        /// </summary>
+        public bool IsDeleted { get; set; } = false;
 
     }
 }

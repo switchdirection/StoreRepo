@@ -42,7 +42,7 @@ namespace StoreRepo.Controllers
 
         public async Task<IActionResult> Index()
         {
-            _authentificationService.CheckAdminUser();
+            await _authentificationService.CheckAdminUser();
             //await _authentificationService.CheckAdminUser();
             //var gameEntity =  await _gameService.GetAllAsync();
 

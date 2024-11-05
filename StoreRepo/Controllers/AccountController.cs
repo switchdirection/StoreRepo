@@ -5,7 +5,7 @@ using StoreRepo.Models;
 namespace StoreRepo.Controllers
 {
     /// <summary>
-    /// Контроллер аутентификации поьзовател
+    /// Контроллер аутентификации поьзователя
     /// </summary>
     public class AccountController : Controller
     {

@@ -16,4 +16,9 @@
     <ProjectReference Include="..\Infastructure\Infastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Roles\Services\" />
+    <Folder Include="Roles\Repository\" />
+  </ItemGroup>
+
 </Project>

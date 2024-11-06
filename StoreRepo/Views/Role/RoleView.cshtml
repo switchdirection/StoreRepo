@@ -1,0 +1,38 @@
+﻿@using Contracts.Roles
+@model List<RoleDto>
+
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<h2>Roles</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>@foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Id</td>
+                <td>@role.Name</td>
+                <td>
+                    <form asp-action="Delete" asp-route-id="@role.Id" method="post">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Удалить
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    
+</table>
+<form asp-action="Create" method="get">
+    <button type="submit" class="btn btn-sm btn-primary">
+        Добавить роль
+    </button>
+</form>

@@ -18,6 +18,9 @@ using Application.Authentification;
 using Application.Images.Services;
 using Application.Images.Repositories;
 using DataAccess.Images;
+using Application.Roles.Services;
+using Application.Roles.Repository;
+using DataAccess.Roles;
 
 namespace ComponentRegister
 {
@@ -45,11 +48,12 @@ namespace ComponentRegister
             services.AddDbContext<StoreDbContext>(options =>
             {
                 options.UseNpgsql(connectionString);
-            });
+            }, ServiceLifetime.Scoped);
 
             services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
         }
 
         public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
@@ -58,6 +62,8 @@ namespace ComponentRegister
             services.AddScoped<IGamesService, GameService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<RoleManager<ApplicationRole>>();
 
         }
 
@@ -67,6 +73,7 @@ namespace ComponentRegister
             {
                 mc.AddProfile(new GameMapperProfile());
                 mc.AddProfile(new CategoryMapperProfile());
+                //mc.AddProfile(new RoleMapperProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();

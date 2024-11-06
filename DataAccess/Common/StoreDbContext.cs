@@ -27,5 +27,7 @@ namespace DataAccess.Common
         public DbSet<PublisherEntity> Publishers { get; set; }
         public DbSet<ReviewEntity> Reviews { get; set; }
         public DbSet<WishlistEntity> Wishlists { get; set; }
+        public DbSet<ApplicationRole> Roles {  get; set; }
+        public DbSet<ApplicationUser> IdentityUsers {  get; set; }
     }
 }

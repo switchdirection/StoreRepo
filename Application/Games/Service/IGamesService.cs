@@ -19,5 +19,8 @@ namespace Application.Games
         /// <param name="game">Транспортная модель игры</param>
         /// <param name="cancellation">Токен отмены</param>
         Task AddGameAsync(ShortGameList game, CancellationToken cancellation);
+
+        Task ChangeVisibility(int gameId, CancellationToken cancellation);
+        Task DeleteAsync(int gameId, CancellationToken cancellation);
     }
 }

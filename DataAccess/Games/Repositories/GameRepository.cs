@@ -13,15 +13,40 @@ namespace DataAccess.Games.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task ChangeVisibility(int gameId, CancellationToken cancellation)
+        {
+            var game = await _dbContext.Set<GameEntity>().FindAsync(gameId);
+            if (game.IsDeleted)
+            {
+                game.IsDeleted = false;
+            }
+            else
+            {
+                game.IsDeleted = true;
+            }
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int gameId, CancellationToken cancellation)
+        {
+            await _dbContext.Set<GameEntity>().Where(g => g.Id == gameId).ExecuteDeleteAsync(cancellation);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public Task<List<GameEntity>> GetAllGamesAsync()
         {
-            return _dbContext.Set<GameEntity>().Include(c => c.Categories).ThenInclude(c => c.GameId).ToListAsync();
+            return _dbContext.Set<GameEntity>().Include(c => c.Categories).ThenInclude(c => c.GameId).ThenInclude(c => c.Images).ToListAsync();
             
         }
 
         public Task<GameEntity> GetElementById(int id)
         {
             return _dbContext.Set<GameEntity>().FindAsync(id).AsTask();
+        }
+
+        public async Task<GameEntity> GetGameByIdASync(int id, CancellationToken cancellation)
+        {
+            return _dbContext.Set<GameEntity>().Include(c => c.Categories).ThenInclude(c => c.GameId).ThenInclude(c => c.Images).FirstOrDefault(g => g.Id == id);
         }
     }
 }

@@ -12,5 +12,6 @@ namespace Application.Category.Repository
     {
         Task GetCategoryByGameId(int gameId);
         Task<List<CategoryEntity>> GetAllCategories();
+        Task<CategoryEntity> GetCategoryById(int id);
     }
 }

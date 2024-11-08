@@ -1,5 +1,6 @@
 ﻿using Application.Roles.Repository;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Roles.Services
 {
@@ -32,6 +33,11 @@ namespace Application.Roles.Services
         public Task<ApplicationRole> GetRoleById(int id, CancellationToken cancellation)
         {
             return _roleRepository.GetRoleById(id, cancellation);
+        }
+
+        public async Task CreateBaseRoles(CancellationToken cancellation)
+        {
+            await _roleRepository.CreateBaseRoles(cancellation);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace StoreRepo.Models
         {
             var imageUrls = await _imageService.SaveImagesAsync(ImageFiles, cancellation);
 
-            return Ok();
+            return Json(imageUrls);
         }
 
         [HttpPost]

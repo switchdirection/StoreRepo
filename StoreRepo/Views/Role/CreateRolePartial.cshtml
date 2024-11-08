@@ -1,10 +1,27 @@
-﻿
-<div asp-validation-summary="All" class="text-danger"></div>
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - AddRole</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/createRolePartial.css" />
+    </head>
+    <body>
+        <div class="d-flex justify-content-center align-items-center min-vh-100">
+            <div class="card shadow p-4" style="width: 400px;">
+                <h3 class="text-center mb-4">Добавить новую роль</h3>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label for="roleName">Новая роль</label>
-        <input name="roleName" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary">Добавить</button>
-</form>
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <form asp-action="Create" method="post">
+                    <div class="form-group mb-3">
+                        <label for="roleName" class="form-label">Новая роль</label>
+                        <input name="roleName" class="form-control" placeholder="Введите название роли" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Добавить</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

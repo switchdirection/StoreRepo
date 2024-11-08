@@ -21,6 +21,7 @@ using DataAccess.Images;
 using Application.Roles.Services;
 using Application.Roles.Repository;
 using DataAccess.Roles;
+using Application.Users;
 
 namespace ComponentRegister
 {
@@ -64,6 +65,7 @@ namespace ComponentRegister
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<RoleManager<ApplicationRole>>();
+            services.AddScoped<IUserService, UserService>();
 
         }
 

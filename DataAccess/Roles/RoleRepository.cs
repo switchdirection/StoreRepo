@@ -44,6 +44,18 @@ namespace DataAccess.Roles
             
         }
 
+        public async Task CreateBaseRoles(CancellationToken cancellation)
+        {
+            var roles = new[] { "admin", "moderator", "user" };
+            foreach (var role in roles)
+            {
+                if (!await _roleManager.RoleExistsAsync(role))
+                {
+                    await _roleManager.CreateAsync(new ApplicationRole() { Name = role });
+                }
+            }
+        }
+
         public async Task DeleteRole(int id, CancellationToken cancellation)
         {
             try

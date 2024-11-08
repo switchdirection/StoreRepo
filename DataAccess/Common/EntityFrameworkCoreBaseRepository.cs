@@ -16,6 +16,7 @@ namespace DataAccess.Common
         {
             await _dbContext.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
+            
         }
 
         public Task<List<T>> GetAllAsync()

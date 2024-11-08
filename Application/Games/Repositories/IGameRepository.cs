@@ -7,5 +7,8 @@ namespace Application.Games.Repositories
     {
         Task<List<GameEntity>> GetAllGamesAsync();
         Task<GameEntity> GetElementById(int id);
+        Task ChangeVisibility(int gameId, CancellationToken cancellation);
+        Task<GameEntity> GetGameByIdASync(int id, CancellationToken cancellation);
+        Task DeleteAsync(int gameId, CancellationToken cancellation);
     }
 }

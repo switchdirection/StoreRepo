@@ -10,19 +10,24 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Steam</a>
                 @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("admin"))
                 {
-                    <form asp-controller="Home" asp-action="AddGame" method="get" class="form-inline">
+                    <form asp-controller="Game" asp-action="ShowGames" method="get" class="form-inline">
                         <button type="submit" class="btn btn-danger">
-                            Добавить продукт
+                            Продукты
                         </button>
                     </form>
                     <form asp-controller="Role" asp-action="Roles" method="get" class="form-inline">
                         <button type="submit" class="btn btn-danger">
                             Роли
+                        </button>
+                    </form>
+                    <form asp-controller="User" asp-action="ShowUsers" method="get" class="form-inline">
+                        <button type="submit" class="btn btn-danger">
+                            Пользователи
                         </button>
                     </form>
                 }

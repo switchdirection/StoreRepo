@@ -7,5 +7,6 @@ namespace Application.Images.Repositories
     {
         Task<ImageEntity> GetByUrlAsync(string url, CancellationToken cancellation);
         Task<int> SaveAsync(ImageEntity image, CancellationToken cancellation);
+        Task DeleteImageAsync(int imageId, CancellationToken cancellation);
     }
 }

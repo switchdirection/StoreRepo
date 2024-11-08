@@ -25,5 +25,10 @@ namespace DataAccess.Images
 
             return image.ImageId;
         }
+
+        public async Task DeleteImageAsync(int imageId, CancellationToken cancellation)
+        {
+            await _dbContext.Images.Where(i => i.ImageId == imageId).ExecuteDeleteAsync(cancellation);
+        }
     }
 }

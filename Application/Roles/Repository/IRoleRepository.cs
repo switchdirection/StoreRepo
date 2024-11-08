@@ -34,5 +34,7 @@ namespace Application.Roles.Repository
         /// <returns></returns>
         Task AddRole(string roleName);
 
+        Task CreateBaseRoles(CancellationToken cancellation);
+
     }
 }

@@ -26,6 +26,9 @@ namespace Application.Category.Services
             return _categoryRepository.GetCategoryByGameId(id);
         }
 
-
+        public async Task<CategoryEntity> GetCategoryById(int id)
+        {
+            return await _categoryRepository.GetCategoryById(id);
+        }
     }
 }

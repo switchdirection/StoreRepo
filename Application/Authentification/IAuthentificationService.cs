@@ -7,7 +7,6 @@ namespace Application.Authentification
     /// </summary>
     public interface IAuthentificationService
     {
-        Task CheckAdminUser();
         /// <summary>
         /// Метод осуществляющий вход пользователя
         /// </summary>

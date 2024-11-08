@@ -47,9 +47,9 @@ namespace StoreRepo.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string roleName, CancellationToken cancellation) 
+        public async Task<IActionResult> Create(string roleName, CancellationToken cancellation) 
         {
-            _roleService.AddRole(roleName);
+            await _roleService.AddRole(roleName);
             return RedirectToAction("Roles");
         }
 

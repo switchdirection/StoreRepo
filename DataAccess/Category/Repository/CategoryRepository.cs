@@ -23,5 +23,10 @@ namespace DataAccess.Category.Repository
         {
             return Task.CompletedTask;
         }
+
+        public async Task<CategoryEntity> GetCategoryById(int id)
+        {
+            return await _dbContext.Set<CategoryEntity>().FirstOrDefaultAsync(c => c.CategoryId == id);
+        }
     }
 }

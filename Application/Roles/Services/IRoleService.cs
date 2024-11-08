@@ -31,5 +31,7 @@ namespace Application.Roles.Services
         /// <param name="cancellation">Токен отмены</param>
         /// <returns></returns>
         Task AddRole(string roleName);
+
+        Task CreateBaseRoles(CancellationToken cancellation);
     }
 }

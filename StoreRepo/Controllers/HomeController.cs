@@ -63,20 +63,6 @@ namespace StoreRepo.Controllers
             return View();
         }
 
-        public async Task<IActionResult> AddGame(CancellationToken cancellation)
-        {
-            var categories = await _categoryService.GetAllCategories();
-
-            ViewBag.Categories = new SelectList(categories, "CategoryId", "CategoryName");
-            return View();
-        }
-
-        public async Task<IActionResult> AddGameMethod(ShortGameList gameDto, CancellationToken cancellation)
-        {
-            await _gameService.AddGameAsync(gameDto, cancellation);
-            return Ok();
-        }
-
         public IActionResult Privacy()
         {
             return View();

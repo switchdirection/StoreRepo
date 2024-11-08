@@ -11,5 +11,6 @@ namespace Application.Category.Services
     {
         Task GetCategoryByGameId(int id);
         Task<List<CategoryEntity>> GetAllCategories();
+        Task<CategoryEntity> GetCategoryById(int id);
     }
 }

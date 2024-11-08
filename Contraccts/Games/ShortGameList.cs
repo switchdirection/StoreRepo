@@ -43,5 +43,10 @@
         /// Рейтинг
         /// </summary>
         public double Rating { get; set; }
+
+        /// <summary>
+        /// Удалена ли игра или нет
+        /// </summary>
+        public bool IsDeleted { get; set; } 
     }
 }

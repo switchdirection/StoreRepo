@@ -17,7 +17,7 @@ namespace Application.Cart.Service
         /// <inheritdoc/>
         public async Task<bool> AddGameToCart(int gameId, ApplicationUser user, CancellationToken cancellation)
         {
-           await _cartRepository.AddGameToCart(gameId, user, cancellation);
+            await _cartRepository.AddGameToCart(gameId, user, cancellation);
             return true;
         }
         /// <inheritdoc/>
@@ -31,9 +31,9 @@ namespace Application.Cart.Service
             await _cartRepository.DeleteItem(gameId, cart, cancellation);
         }
         /// <inheritdoc/>
-        public async Task<CartEntity> GetByIdAsync(int id, CancellationToken cancellation)
+        public Task<CartEntity> GetByIdAsync(int id, CancellationToken cancellation)
         {
-            return await _cartRepository.GetByIdAsync(id, cancellation);
+            return _cartRepository.GetByIdAsync(id, cancellation);
         }
         /// <inheritdoc/>
         public async Task<List<CartItemDto>> GetCartItems(ApplicationUser user, CancellationToken cancellation)

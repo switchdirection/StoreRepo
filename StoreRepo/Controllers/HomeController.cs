@@ -63,7 +63,7 @@ namespace StoreRepo.Controllers
             var gameEntity =  await _gameService.GetAllNotDeletedAsync(new PagedRequest
             {
                 PageNumber = pageNumber,
-                PageSize = 6,
+                PageSize = 3,
                 Search = search,
                 Categories = categories,
                 MinPrice = minPrice,

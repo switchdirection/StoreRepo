@@ -8,36 +8,51 @@
 
 @if (TempData["UserDeletedSuccess"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; margin: 0 auto;">
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
         @TempData["UserDeletedSuccess"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 else if (TempData["UserDeletedError"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; margin: 0 auto;">
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
         @TempData["UserDeletedError"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
+@if (TempData["UserEditedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserEditedSuccess"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+}
+else if (TempData["UserEditedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserEditedError"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+}
+
 @if (TempData["UserAddedSuccess"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; margin: 0 auto;">
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
         @TempData["UserAddedSuccess"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 else if (TempData["UserAddedError"] != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; margin: 0 auto;">
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
         @TempData["UserAddedError"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
 }
 
-<div class="container my-4">
+<div class="container my-4" style="padding-top: 50px;">
     <h2 class="text-left mb-4">Пользователи</h2>
 
     <div class="mb-3">
@@ -62,33 +77,43 @@ else if (TempData["UserAddedError"] != null)
             </tr>
         </thead>
         <tbody>
-            @foreach (var user in Model)
+            @if (Model != null && Model.Any())
             {
-                <tr class="user-row" data-roles="@string.Join(",", user.Roles)">
-                    <td class="text-center align-middle">@user.Id</td>
-                    <td class="text-center align-middle">@user.Name</td>
-                    <td class="text-center align-middle">@user.Email</td>
-                    @if (@user.PhoneNumber == null)
-                    {
-                        <td class="text-center align-middle">Не указан</td>
-                    }
-                    else
-                    {
-                        <td class="text-center align-middle">@user.PhoneNumber</td>
-                    }
-                    <td class="text-center align-middle">@string.Join(", ", user.Roles)</td>
-                    <td class="text-center align-middle d-flex justify-content-center gap-2">
-                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-user-id="@user.Id">
-                            Удалить
-                        </button>
-                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editUserModal"
-                                data-user-id="@user.Id" data-user-name="@user.Name" data-user-email="@user.Email"
-                                data-user-phone="@user.PhoneNumber" data-user-roles="@string.Join(", ", user.Roles)">
-                            Редактировать
-                        </button>
-                    </td>
+                @foreach (var user in Model)
+                {
+                    <tr class="user-row" data-roles="@string.Join(",", user.Roles)">
+                        <td class="text-center align-middle">@user.Id</td>
+                        <td class="text-center align-middle">@user.Name</td>
+                        <td class="text-center align-middle">@user.Email</td>
+                        @if (@user.PhoneNumber == null)
+                        {
+                            <td class="text-center align-middle">Не указан</td>
+                        }
+                        else
+                        {
+                            <td class="text-center align-middle">@user.PhoneNumber</td>
+                        }
+                        <td class="text-center align-middle">@string.Join(", ", user.Roles)</td>
+                        <td class="text-center align-middle d-flex justify-content-center gap-2">
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-user-id="@user.Id">
+                                Удалить
+                            </button>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editUserModal"
+                                    data-user-id="@user.Id" data-user-name="@user.Name" data-user-email="@user.Email"
+                                    data-user-phone="@user.PhoneNumber" data-user-roles="@string.Join(", ", user.Roles)">
+                                Редактировать
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center">История заказов пуста</td>
                 </tr>
             }
+            
         </tbody>
     </table>
 

@@ -1,6 +1,5 @@
 ﻿using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Infastructure.HashPassword;
 
 namespace Application.Authentification
 {
@@ -31,7 +30,8 @@ namespace Application.Authentification
             {
                 UserName = username,
                 Email = email,
-                
+                RegistrationDate = DateTime.UtcNow,
+                Cart = new CartEntity()
             };
 
             var role = await _roleManager.FindByNameAsync("user");

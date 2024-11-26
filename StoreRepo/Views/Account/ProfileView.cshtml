@@ -1,0 +1,317 @@
+﻿@using Application.Users.Model;
+@model UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Личный кабинет";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+@if (TempData["UserNameChangedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserNameChangedSuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (TempData["UserNameChangedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserNameChangedError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["UserEmailChangedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserEmailChangedSuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (TempData["UserNEmailChangedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserEmailChangedError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["UserPhoneNumberChangedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserPhoneNumberChangedSuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (TempData["UserPhoneNumberChangedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserPhoneNumberChangedError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["UserPasswordChangedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserPasswordChangedSuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (TempData["UserPasswordChangedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserPasswordChangedError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="container mt-5" style="padding-top: 30px;">
+    <h2 class="text-center mb-4">Личный кабинет</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title" style="margin-bottom: 20px;">Информация о пользователе</h5>
+
+                    <p>
+                        <strong>Имя:</strong> @Model.Name
+                        <button class="btn btn-sm btn-outline-secondary ml-2" data-toggle="modal" data-target="#editNameModal"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    </p>
+
+                    <p>
+                        <strong>Email:</strong> @Model.Email
+                        <button class="btn btn-sm btn-outline-secondary ml-2" data-toggle="modal" data-target="#editEmailModal"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    </p>
+
+                    <p>
+                        <strong>Номер:</strong> 
+                        @if(string.IsNullOrEmpty(Model.PhoneNumber)){
+                            <span>
+                                Не указан
+                            </span>
+                        }
+                        else{
+                             <span>
+                                 @Model.PhoneNumber
+                             </span>
+                        }
+
+                        <button class="btn btn-sm btn-outline-secondary ml-2" data-toggle="modal" data-target="#editPhoneNumberModal"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    </p>
+
+                    <p>
+                        <strong>Дата регистрации:</strong> @Model.RegistrationDate.ToString("dd.MM.yyyy")
+                    </p>
+
+                    <button class="btn btn-primary w-100" data-toggle="modal" data-target="#changePasswordModal">
+                        Изменить пароль
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок с заказами -->
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">История заказов</h5>
+                    @if (Model.Orders != null && Model.Orders.Any())
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Сумма</th>
+                                    <th>Статус</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.Orders)
+                                {
+                                    <tr>
+                                        <td>@order.OrderDate.ToString("dd.MM.yyyy")</td>
+                                        <td>@order.TotalAmount.ToString("C")</td>
+                                        <td>@order.Status</td>
+                                        <td>
+                                            <a href="javascript:void(0);"
+                                               class="btn btn-sm btn-outline-primary"
+                                               onclick="loadOrderDetails(@order.OrderId)">
+                                                Детали
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>У вас пока нет заказов.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для редактирования имени -->
+<div class="modal fade" id="editNameModal" tabindex="-1" role="dialog" aria-labelledby="editNameModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editNameModalLabel">Редактировать имя</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="UpdateName" asp-controller="Account" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Имя</label>
+                        <input type="text" class="form-control" id="name" name="newUserName" value="@Model.Name" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для редактирования email -->
+<div class="modal fade" id="editEmailModal" tabindex="-1" role="dialog" aria-labelledby="editEmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEmailModalLabel">Редактировать Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="UpdateEmail" asp-controller="Account" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="newEmail" value="@Model.Email" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для редактирования номера телефона -->
+<div class="modal fade" id="editPhoneNumberModal" tabindex="-1" role="dialog" aria-labelledby="editPhoneNumberModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPhoneNumberModel">Редактировать номер телефона</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="UpdatePhoneNumber" asp-controller="Account" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="phoneNumber">Номер телефона:</label>
+                        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="@Model.PhoneNumber" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для изменения пароля -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Изменить пароль</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="ChangePassword" asp-controller="Account" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="currentPassword">Старый пароль</label>
+                        <input type="password" class="form-control" id="currentPassword" name="CurrentPassword" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Новый пароль</label>
+                        <input type="password" class="form-control" id="newPassword" name="NewPassword" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Назад</button>
+                    <button type="submit" class="btn btn-primary">Изменить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Модальное окно деталей заказа-->
+<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderDetailsModalLabel">Детали заказа</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Пользователь:</strong> <span id="userName"></span></p>
+                <p><strong>Цена:</strong> <span id="totalPrice"></span></p>
+                <p><strong>Статус:</strong> <span id="status"></span></p>
+                <p><strong>Дата заказа:</strong> <span id="purchaseDate"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            let alert = document.querySelector('.alert');
+            if (alert) alert.classList.remove('show');
+        }, 5000); // Закрыть через 5 секунд
+    });
+
+    function loadOrderDetails(orderId) {
+        // Отправка AJAX-запроса
+        fetch(`/Order/Details?id=${orderId}`)
+            .then(response => {
+                if (!response.json) {
+                    throw new Error("Ошибка загрузки данных заказа.");
+                }
+                return response.json(); // Предполагается, что контроллер возвращает JSON
+            })
+            .then(order => {
+                // Заполнение модального окна данными
+                document.getElementById('userName').textContent = order.userName;
+                document.getElementById('totalPrice').textContent = order.totalPrice.toFixed(2) + ' Br';
+                document.getElementById('status').textContent = order.status;
+                document.getElementById('purchaseDate').textContent = new Date(order.purchaseDate).toLocaleDateString();
+
+                // Открытие модального окна
+                $('#orderDetailsModal').modal('show');
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    }
+</script>

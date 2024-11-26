@@ -36,6 +36,32 @@
             <input type="number" class="form-control" id="Rating" name="Rating" asp-for="Rating" required />
         </div>
 
+        <div class="form-group mb-3">
+            <label class="form-label">Разработчики</label>
+            <div>
+                @foreach (var developer in ViewBag.Developers)
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="Developer_@developer.Value" name="Developers" value="@developer.Value" />
+                        <label class="form-check-label" for="Developer_@developer.Value">@developer.Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Издатели</label>
+            <div>
+                @foreach (var publisher in ViewBag.Publishers)
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="Publisher_@publisher.Value" name="Publishers" value="@publisher.Value" />
+                        <label class="form-check-label" for="Publisher_@publisher.Value">@publisher.Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
         <!-- Выбор категорий с использованием чекбоксов -->
         <div class="form-group mb-3">
             <label class="form-label">Категории</label>
@@ -45,6 +71,19 @@
                     <div class="form-check form-check-inline">
                         <input type="checkbox" class="form-check-input" id="Category_@category.Value" name="Categories" value="@category.Value" />
                         <label class="form-check-label" for="Category_@category.Value">@category.Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Платформы</label>
+            <div>
+                @foreach (var platform in ViewBag.Platforms)
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="Platform_@platform.Value" name="Platforms" value="@platform.Value" />
+                        <label class="form-check-label" for="Platfomr_@platform.Value">@platform.Text</label>
                     </div>
                 }
             </div>

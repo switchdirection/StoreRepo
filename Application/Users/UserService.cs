@@ -1,4 +1,6 @@
-﻿using Application.Roles.Services;
+﻿using Application.Cart.Repository;
+using Application.Roles.Services;
+using Contracts.Requests;
 using Contracts.Users;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -6,23 +8,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Users
 {
+    /// <summary>
+    /// Сервис по работе с пользователем
+    /// </summary>
     public sealed class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IRoleService _roleService;
-
+        private readonly ICartRepository _cartRepository;
         public UserService(
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
-            IRoleService roleService
+            IRoleService roleService,
+            ICartRepository cartRepository
             )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _roleService = roleService;
+            _cartRepository = cartRepository;
             
         }
+        /// <inheritdoc/>
         public async Task<List<UserDto>> GetAllUsersAsync(CancellationToken cancellation)
         {
             var users = await _userManager.Users.ToListAsync(cancellation);
@@ -42,17 +50,19 @@ namespace Application.Users
             return usersDto;
 		}
 
-        public async Task CreateAdminUser(CancellationToken cancellation)
+        /// <inheritdoc/>
+        public async Task CreateAdminUserAsync(CancellationToken cancellation)
         {
             
-            await _roleService.CreateBaseRoles(cancellation);
+            await _roleService.CreateBaseRolesAsync(cancellation);
+            string userName = "admin";
             string email = "admin@admin.com";
             string password = "Test123!";
             if (await _userManager.FindByEmailAsync(email) == null)
             {
                 var user = new ApplicationUser()
                 {
-                    UserName = email,
+                    UserName = userName,
                     Email = email
                 };
                 await _userManager.CreateAsync(user, password);
@@ -61,7 +71,8 @@ namespace Application.Users
             }
         }
 
-        public async Task<IdentityResult> AddUser(string name, string email, string password, CancellationToken cancellation)
+        /// <inheritdoc/>
+        public async Task<IdentityResult> AddUserAsync(string name, string email, string password, CancellationToken cancellation)
         {
             var user = new ApplicationUser
             {
@@ -77,7 +88,8 @@ namespace Application.Users
             return result;
         }
 
-        public async Task<IdentityResult> AddUser(string name, string email, string password, string phoneNumber, CancellationToken cancellation)
+        /// <inheritdoc/>
+        public async Task<IdentityResult> AddUserAsync(string name, string email, string password, string phoneNumber, CancellationToken cancellation)
         {
             var user = new ApplicationUser
             {
@@ -102,13 +114,15 @@ namespace Application.Users
 
         }
 
-        public async Task<IdentityResult> DeleteUser(int id)
+        /// <inheritdoc/>
+        public async Task<IdentityResult> DeleteUserAsync(int id)
         {
            var user = await _userManager.FindByIdAsync(id.ToString());
            return await _userManager.DeleteAsync(user);
         }
 
-        public async Task<IdentityResult> EditUser(int id, string name, string email, List<string> roles, CancellationToken cancellation)
+        /// <inheritdoc/>
+        public async Task<IdentityResult> EditUserAsync(int id, string name, string email, List<string> roles, CancellationToken cancellation)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user != null)
@@ -133,7 +147,8 @@ namespace Application.Users
             }
         }
 
-        public async Task<IdentityResult> EditUser(int id, string name, string email, string phoneNumber, List<string> roles, CancellationToken cancellation)
+        /// <inheritdoc/>
+        public async Task<IdentityResult> EditUserAsync(int id, string name, string email, string phoneNumber, List<string> roles, CancellationToken cancellation)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user != null)
@@ -146,8 +161,8 @@ namespace Application.Users
                 var rolesToAdd = roles.Except(userRoles);
                 var rolesToRemove = userRoles.Except(roles);
 
-                _userManager.AddToRolesAsync(user, rolesToAdd).Wait();
-                _userManager.RemoveFromRolesAsync(user, rolesToRemove).Wait();
+                await _userManager.AddToRolesAsync(user, rolesToAdd);
+                await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
                 var result = await _userManager.UpdateAsync(user);
 
                 return result;
@@ -155,6 +170,104 @@ namespace Application.Users
             else
             {
                 throw new Exception("user == null, /UserService.cs/EditUser");
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task AddCartToUserAsync(string userId, CancellationToken cancellation)
+        {
+            await _cartRepository.AddCartToUserAsync(userId, cancellation);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IdentityResult> ChangeUserNameAsync(int userId, string userName, CancellationToken cancellation)
+        {
+            IdentityResult result = new IdentityResult();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                user.UserName = userName;
+                result = await _userManager.UpdateAsync(user);
+                return result;
+            }
+            catch (NullReferenceException ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                return result;
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<IdentityResult> ChangeEmailAsync(int userId, string email, CancellationToken cancellation)
+        {
+            IdentityResult result = new IdentityResult();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                user.Email = email;
+                result = await _userManager.UpdateAsync(user);
+                return result;
+            }
+            catch (NullReferenceException ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                return result;
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<IdentityResult> ChangePhoneNumberAsync(int userId, string phoneNumber, CancellationToken cancellation)
+        {
+            IdentityResult result = new IdentityResult();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                user.PhoneNumber = phoneNumber;
+                result = await _userManager.UpdateAsync(user);
+                return result;
+            }
+            catch (NullReferenceException ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                return result;
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<IdentityResult> ChangePasswordAsync(ChangePasswordRequest request, int userId, CancellationToken cancellation)
+        {
+            IdentityResult result = new IdentityResult();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                result = await _userManager.ResetPasswordAsync(user, resetToken, request.newPassword);
+                return result;
+            }
+            catch (NullReferenceException ex) 
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                return result;
             }
         }
     }

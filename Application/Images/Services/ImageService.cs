@@ -1,13 +1,13 @@
-﻿using Application.Common;
-using Application.Images.Handler;
-using Application.Images.Repositories;
+﻿using Application.Images.Repositories;
 using Contracts.Images;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
-using System.Security.Policy;
 
 namespace Application.Images.Services
 {
+    /// <summary>
+    /// Сервис по работе с изоюражениями
+    /// </summary>
     public sealed class ImageService : IImageService
     {
         private readonly IImageRepository _imageRepository;
@@ -16,6 +16,7 @@ namespace Application.Images.Services
             _imageRepository = imageRepository;
         }
 
+        /// <inheritdoc/>
         public async Task<ImageDto> GetImageDtoAsync(int id, CancellationToken cancellation)
         {
             var image = await _imageRepository.GetByIdAsync(id);
@@ -27,6 +28,11 @@ namespace Application.Images.Services
             };
         }
 
+        /// <summary>
+        /// Метод для сохранения выбранного изображения
+        /// </summary>
+        /// <param name="imageFile">Выбранное изображения</param>
+        /// <param name="cancellation">Токен отмены</param>
         public async Task<string> SaveImageAsync(IFormFile imageFile, CancellationToken cancellation)
         {
             var imageEntity = new ImageEntity
@@ -39,9 +45,10 @@ namespace Application.Images.Services
             imageList.Add(imageEntity);*/
             var imageId = await _imageRepository.SaveAsync(imageEntity, cancellation);
 
-            return $"https://localhost:7013/images/{imageId}";
+            return $"/images/{imageId}";
         }
 
+        /// <inheritdoc/>
         public async Task<ImageEntity[]> SaveImageEntityAsync(string mainImageUrl, string[] imagesUrls, GameEntity gameEntity, CancellationToken cancellation)
         {
             List<ImageEntity> result = null;
@@ -121,6 +128,11 @@ namespace Application.Images.Services
             return result.ToArray();
         }
 
+        /// <summary>
+        /// Метод для извлечения идентификатора изображения из сохранённого url
+        /// </summary>
+        /// <param name="imageUrl">ссылка на изображение</param>
+        /// <returns></returns>
         public static int ExtractImageId(string imageUrl)
         {
             int lastSlashIndext = imageUrl.LastIndexOf('/');
@@ -133,6 +145,7 @@ namespace Application.Images.Services
             throw new Exception("Не удалось вытащить id изображения. ImageService");
         }
 
+        /// <inheritdoc/>
         public async Task<IReadOnlyCollection<string>> SaveImagesAsync(List<IFormFile> ImageFiles, CancellationToken cancellation)
         {
             var result = new List<string>(ImageFiles.Count);
@@ -145,6 +158,11 @@ namespace Application.Images.Services
             return result.ToArray();
         }
 
+        /// <summary>
+        /// Метод для получения контента изображения ввиде массива байтов
+        /// </summary>
+        /// <param name="imageFile">Выбранное изображение</param>
+        /// <param name="cancellation">Токен отмены</param>
         private async Task<byte[]> GetByteArrayAsync(IFormFile imageFile, CancellationToken cancellation)
         {
             using var memoryStream = new MemoryStream();
@@ -153,6 +171,7 @@ namespace Application.Images.Services
             return memoryStream.ToArray();
         }
 
+        /// <inheritdoc/>
         public async Task DeleteImageAsync(int imageId, CancellationToken cancellation)
         {
             await _imageRepository.DeleteImageAsync(imageId, cancellation);

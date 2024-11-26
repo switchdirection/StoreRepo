@@ -1,11 +1,13 @@
 ﻿using Application.Users;
-using Contracts.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StoreRepo.Models;
 
 namespace StoreRepo.Controllers
 {
+    /// <summary>
+    /// Контроллер пользователей
+    /// </summary>
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -14,14 +16,21 @@ namespace StoreRepo.Controllers
         {
             _userService = userService;
         }
-
+        /// <summary>
+        /// Метод контроллера перенаправляющий на страницу с отображением всех зарегистрированных пользователей
+        /// </summary>
+        /// <param name="cancellation">Токен отмены</param>
         [HttpGet]
         public async Task<IActionResult> ShowUsers(CancellationToken cancellation)
         {
             var usersDto = await _userService.GetAllUsersAsync(cancellation);
             return View("UsersView", usersDto);
         }
-
+        /// <summary>
+        /// Метод контроллера для добавления нового пользователя
+        /// </summary>
+        /// <param name="user">Пользователь</param>
+        /// <param name="cancellation">Токен отмены</param>
         [HttpPost]
         public async Task<IActionResult> Create(UserCreateModel user, CancellationToken cancellation)
         {
@@ -29,9 +38,9 @@ namespace StoreRepo.Controllers
             {
                 IdentityResult result;
                 if (user.PhoneNumber == null)
-                    result = await _userService.AddUser(user.Name, user.Email, user.Password, cancellation);
+                    result = await _userService.AddUserAsync(user.Name, user.Email, user.Password, cancellation);
                 else
-                    result = await _userService.AddUser(user.Name, user.Email, user.Password, user.PhoneNumber, cancellation);
+                    result = await _userService.AddUserAsync(user.Name, user.Email, user.Password, user.PhoneNumber, cancellation);
                 
                 if (result.Succeeded)
                 {
@@ -51,18 +60,21 @@ namespace StoreRepo.Controllers
             }
             
         }
-
+        /// <summary>
+        /// Метод контроллера для редактирования пользователя
+        /// </summary>
+        /// <param name="model">Модель для редактирования пользователя</param>
+        /// <param name="cancellation">Токен отмены</param>
         [HttpPost]
         public async Task<IActionResult> Edit (UserEditModel model, CancellationToken cancellation)
         {
-            if (ModelState.IsValid)
-            {
+            
                 IdentityResult result = new IdentityResult();
                 if(model.PhoneNumber == "")
                 {
                     try
                     {
-                        result = await _userService.EditUser(model.Id, model.Name, model.Email, model.Roles, cancellation);
+                        result = await _userService.EditUserAsync(model.Id, model.Name, model.Email, model.Roles, cancellation);
                     }
                     catch (Exception ex) 
                     {
@@ -73,7 +85,7 @@ namespace StoreRepo.Controllers
                 {
                     try
                     {
-                        result = await _userService.EditUser(model.Id, model.Name, model.Email, model.PhoneNumber, model.Roles, cancellation);
+                        result = await _userService.EditUserAsync(model.Id, model.Name, model.Email, model.PhoneNumber, model.Roles, cancellation);
                     }
                     catch (Exception ex)
                     {
@@ -91,14 +103,18 @@ namespace StoreRepo.Controllers
                     ModelState.AddModelError("", "Ошибка при обновлении пользователя");
                 }
                 return RedirectToAction("ShowUsers");
-            }
-
-            return View(model);
+           
         }
 
+        /// <summary>
+        /// Метод контроллера для удаления пользователя
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя</param>
+        /// <param name="cancellation">Токен отмены</param>
+        [HttpPost]
         public async Task<IActionResult> Delete(int userId, CancellationToken cancellation) 
         {
-            var result = await _userService.DeleteUser(userId);
+            var result = await _userService.DeleteUserAsync(userId);
             if (result.Succeeded)
             {
                 TempData["UserDeletedSuccess"] = "Пользователь успешно удалён";

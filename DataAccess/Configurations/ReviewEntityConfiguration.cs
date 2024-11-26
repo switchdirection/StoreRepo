@@ -38,7 +38,7 @@ namespace DataAccess.Configurations
             //Связь 1 ко многим, 1 пользователь может иметь много написанных отзывов
             builder
                 .HasOne(r => r.UserId)
-                .WithMany(u => u.ReviewId);
+                .WithMany(u => u.Reviews);
             //Связь 1 ко многим, 1 игра может иметь много отзывов
             builder
                 .HasOne(r => r.GameId)

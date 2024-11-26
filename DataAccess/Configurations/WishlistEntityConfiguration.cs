@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿/*using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,7 +25,7 @@ namespace DataAccess.Configurations
             builder
                 .HasOne(w => w.User)
                 .WithOne(u => u.Wishlist)
-                .HasForeignKey<UserEntity>(u => u.Wishlistid);
+                .HasForeignKey<ApplicationUser>(u => u.Wishlistid);
             //Связь многие ко многим, разные списки могут содержать 1 игру, и наоборот
             builder
                 .HasMany(w => w.GameId)
@@ -42,3 +42,4 @@ namespace DataAccess.Configurations
         }
     }
 }
+*/

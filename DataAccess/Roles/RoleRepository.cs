@@ -2,16 +2,12 @@
 using DataAccess.Common;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Roles
 {
+    /// <summary>
+    /// Репозиторий по работе с ролями
+    /// </summary>
     public sealed class RoleRepository : EntityFrameworkCoreBaseRepository<ApplicationRole>, IRoleRepository
     {
         private readonly RoleManager<ApplicationRole> _roleManager;
@@ -24,8 +20,8 @@ namespace DataAccess.Roles
             _roleManager = roleManager;
             _dbContext = dbContext;
         }
-
-        public async Task AddRole(string roleName)
+        /// <inheritdoc/>
+        public async Task AddRoleAsync(string roleName)
         {
             try
             {
@@ -44,7 +40,8 @@ namespace DataAccess.Roles
             
         }
 
-        public async Task CreateBaseRoles(CancellationToken cancellation)
+        /// <inheritdoc/>
+        public async Task CreateBaseRolesAsync(CancellationToken cancellation)
         {
             var roles = new[] { "admin", "moderator", "user" };
             foreach (var role in roles)
@@ -56,7 +53,8 @@ namespace DataAccess.Roles
             }
         }
 
-        public async Task DeleteRole(int id, CancellationToken cancellation)
+        /// <inheritdoc/>
+        public async Task DeleteRoleAsync(int id, CancellationToken cancellation)
         {
             try
             {
@@ -74,12 +72,14 @@ namespace DataAccess.Roles
             
         }
 
-        public List<ApplicationRole> GetAllRoles(CancellationToken cancellation)
+        /// <inheritdoc/>
+        public List<ApplicationRole> GetAllRolesAsync(CancellationToken cancellation)
         {
             return _roleManager.Roles.ToList();
         }
 
-        public async Task<ApplicationRole> GetRoleById(int id, CancellationToken cancellation)
+        /// <inheritdoc/>
+        public async Task<ApplicationRole> GetRoleByIdAsync(int id, CancellationToken cancellation)
         {
             return await _roleManager.FindByIdAsync(id.ToString());
         }

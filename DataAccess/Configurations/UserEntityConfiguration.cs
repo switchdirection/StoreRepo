@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿/*using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -53,7 +53,9 @@ namespace DataAccess.Configurations
             //Связь 1 к 1, 1 пользователь имеет 1 список желаемых игр
             builder
                 .HasOne(u => u.Wishlist)
-                .WithOne(w => w.User).HasForeignKey<WishlistEntity>(w => w.UserId);
+                .WithOne(w => w.User)
+                .HasForeignKey<WishlistEntity>(w => w.UserId);
+
 
             //==============Данные================
             builder
@@ -72,3 +74,4 @@ namespace DataAccess.Configurations
         }
     }
 }
+*/

@@ -20,6 +20,6 @@
         /// <summary>
         /// Игры выпущенные этим разработчиком
         /// </summary>
-        public GameEntity[]? GameId { get; set; }
+        public List<GameEntity> Games { get; set; } = new List<GameEntity>();
     }
 }

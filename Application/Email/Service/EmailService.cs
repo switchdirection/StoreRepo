@@ -16,7 +16,7 @@ namespace Application.Email.Service
             string smtpServer = "smtp.mail.ru";
             int smtpPort = 587;
             string smtpUsername = "gordon-play@bk.ru";
-            string smtpPassword = "zyXyyMDmaYLL1wM6Sz7B";
+            string smtpPassword = "";
 
             using (SmtpClient smtpClient = new SmtpClient(smtpServer, smtpPort))
             {
@@ -48,7 +48,7 @@ namespace Application.Email.Service
             string smtpServer = "smtp.mail.ru";
             int smtpPort = 587;
             string smtpUsername = "gordon-play@bk.ru";
-            string smtpPassword = "zyXyyMDmaYLL1wM6Sz7B";
+            string smtpPassword = "";
 
             using (SmtpClient smtpClient = new SmtpClient(smtpServer, smtpPort))
             {

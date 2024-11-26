@@ -12,7 +12,7 @@
         /// <summary>
         /// Пользователь оставивший отзыв
         /// </summary>
-        public UserEntity? UserId { get; set; }
+        public ApplicationUser? UserId { get; set; }
         /// <summary>
         /// Игра на которую оставили отзыв
         /// </summary>

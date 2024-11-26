@@ -37,11 +37,11 @@ namespace DataAccess.Configurations
             //============Связи=============
             //Связь 1 ко многим, 1 пользователь может иметь много заказов
             builder
-                .HasOne(o => o.UserId)
+                .HasOne(o => o.User)
                 .WithMany(u => u.Orders);
             //Связь многие ко многим, 1 заказ может включать множество игр, 1 игра может быть включена во множество заказов
             builder
-                .HasMany(o => o.GameId)
+                .HasMany(o => o.Games)
                 .WithMany(g => g.Orders);
         }
     }

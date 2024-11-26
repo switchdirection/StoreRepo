@@ -7,7 +7,7 @@ namespace Infastructure.Mapper
     {
         public RoleMapperProfile()
         {
-            CreateMap<List<ApplicationRole>, List<RoleDto>>();
+            CreateMap<ApplicationRole, RoleDto>();
         }
     }
 }

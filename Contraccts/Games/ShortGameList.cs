@@ -30,9 +30,22 @@
         /// </summary>
         public string ImageUrl { get; set; }
         /// <summary>
+        /// Разработчики
+        /// </summary>
+        public List<DeveloperDto> Developers { get; set; } = [];
+        /// <summary>
+        /// Издатели
+        /// </summary>
+        public List<PublisherDto> Publishers { get; set; } = [];
+        /// <summary>
+        /// Платформы
+        /// </summary>
+        public List<PlatformDto> Platforms { get; set; } = [];
+
+        /// <summary>
         /// Остальные изображения
         /// </summary>
-        public string[] ImagesUrls { get; set; }
+        public string[] ImagesUrls { get; set; } = [];
         /// <summary>
         /// Категории
         /// </summary>

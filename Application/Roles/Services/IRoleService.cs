@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Contracts.Roles;
+using Domain.Entities;
 
 namespace Application.Roles.Services
 {
@@ -11,27 +12,29 @@ namespace Application.Roles.Services
         /// Метод для получения всех ролей
         /// </summary>
         /// <param name="cancellation">Токен отмены</param>
-        List<ApplicationRole> GetAllRoles(CancellationToken cancellation);
+        List<RoleDto> GetAllRolesAsync(CancellationToken cancellation);
         /// <summary>
         /// Метод для получения роли по идентификатору
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <param name="cancellation">Токен отмены</param>
-        Task<ApplicationRole> GetRoleById(int id, CancellationToken cancellation);
+        Task<ApplicationRole> GetRoleByIdAsync(int id, CancellationToken cancellation);
         /// <summary>
         /// Метод для удаления роли
         /// </summary>
         /// <param name="id">Идентификатор роли</param>
         /// <param name="cancellation">Токен отмены</param>
-        Task DeleteRole(int id, CancellationToken cancellation);
+        Task DeleteRoleAsync(int id, CancellationToken cancellation);
         /// <summary>
         /// Метод для добавления роля
         /// </summary>
         /// <param name="roleName">Роль</param>
         /// <param name="cancellation">Токен отмены</param>
-        /// <returns></returns>
-        Task AddRole(string roleName);
-
-        Task CreateBaseRoles(CancellationToken cancellation);
+        Task AddRoleAsync(string roleName);
+        /// <summary>
+        /// Метод для создания всех базовых ролей
+        /// </summary>
+        /// <param name="cancellation">Токен отмены</param>
+        Task CreateBaseRolesAsync(CancellationToken cancellation);
     }
 }

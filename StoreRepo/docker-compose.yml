@@ -1,0 +1,13 @@
+﻿services:
+  mvc-app:
+    container_name: mvc-app
+    image: mvc-app
+    build:
+      context: .
+      dockerfile: Hosts/StoreRepo.MVC/Dockerfile
+    ports:
+        - "8080:8080"
+        - "8081:8081"
+    env_file:
+        - .env
+    restart: always

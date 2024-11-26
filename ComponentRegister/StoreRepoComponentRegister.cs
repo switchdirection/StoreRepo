@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Application.Games;
 using Application.Category;
+using DataAccess.Cart;
 using Application.Games.Repositories;
 using AutoMapper;
 using DataAccess.Category.Repository;
@@ -22,6 +23,27 @@ using Application.Roles.Services;
 using Application.Roles.Repository;
 using DataAccess.Roles;
 using Application.Users;
+using Application.Developers.Repository;
+using DataAccess.Developers.Repository;
+using Application.Publishers.Repository;
+using DataAccess.Publishers.Repository;
+using Application.Platforms.Repository;
+using DataAccess.Platforms.Repository;
+using DataAccess.Orders.Repository;
+using Application.Developers.Service;
+using Application.Publishers.Service;
+using Application.Platforms.Service;
+using Application.Cart.Service;
+using Application.Cart.Repository;
+using Application.Orders.Service;
+using Application.Orders.Repository;
+using Application.OrdersHistory.Repository;
+using DataAccess.OrdersHistory.Repository;
+using Application.OrdersHistory.Service;
+using Application.PasswordReset.Repository;
+using DataAccess.PasswordReset.Repository;
+using Application.PasswordReset.Service;
+using Application.Email.Service;
 
 namespace ComponentRegister
 {
@@ -55,6 +77,13 @@ namespace ComponentRegister
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IDeveloperRepository, DeveloperRepository>();
+            services.AddScoped<IPublisherRepository, PublisherRepository>();
+            services.AddScoped<IPlatformRepository, PlatformRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrdersHistoryRepository, OrdersHistoryRepository>();
+            services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
         }
 
         public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
@@ -66,6 +95,14 @@ namespace ComponentRegister
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<RoleManager<ApplicationRole>>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDeveloperService, DeveloperService>();
+            services.AddScoped<IPublisherService, PublisherService>();
+            services.AddScoped<IPlatformService, PlatformService>();
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrdersHistoryService, OrdersHistoryService>();
+            services.AddScoped<IPasswordResetService, PasswordResetService>();
+            services.AddScoped<IEmailService, EmailService>();
 
         }
 
@@ -75,7 +112,11 @@ namespace ComponentRegister
             {
                 mc.AddProfile(new GameMapperProfile());
                 mc.AddProfile(new CategoryMapperProfile());
-                //mc.AddProfile(new RoleMapperProfile());
+                mc.AddProfile(new DeveloperMapperProfile());
+                mc.AddProfile(new PublisherMapperProfile());
+                mc.AddProfile(new PlatformMapperProfile());
+                mc.AddProfile(new OrdersHistoryMapperProfile());
+                mc.AddProfile(new OrderMapperProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();

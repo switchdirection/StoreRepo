@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities
+﻿/*namespace Domain.Entities
 {
     /// <summary>
     /// Пользователь
@@ -48,3 +48,4 @@
         public decimal WalletBalance { get; set; } = 0;
     }
 }
+*/

@@ -12,8 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infastructure\Infastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DataAccess">
+      <HintPath>..\DataAccess\bin\Debug\net8.0\DataAccess.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

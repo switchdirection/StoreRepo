@@ -53,7 +53,7 @@
         /// <summary>
         /// Список избранных игр
         /// </summary>
-        public List<WishlistEntity> Wishlists { get; set; } = new List<WishlistEntity>();
+        //public List<WishlistEntity> Wishlists { get; set; } = new List<WishlistEntity>();
         /// <summary>
         /// Отзывы на игру
         /// </summary>

@@ -16,6 +16,6 @@
         /// <summary>
         /// Список игры для конкретной платформы
         /// </summary>
-        public GameEntity[]? GameId { get; set; } = [];
+        public List<GameEntity> Games { get; set; } = new List<GameEntity>();
     }
 }

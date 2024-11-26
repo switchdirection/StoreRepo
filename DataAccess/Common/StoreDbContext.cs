@@ -17,7 +17,7 @@ namespace DataAccess.Common
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(StoreDbContext).Assembly);
         }
 
-        public DbSet<UserEntity> Users { get; set; }
+        //public DbSet<UserEntity> Users { get; set; }
         public DbSet<GameEntity> Games { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
         public DbSet<DeveloperEntity> Developers { get; set; }
@@ -26,8 +26,11 @@ namespace DataAccess.Common
         public DbSet<PlatformEntity> Platforms { get; set; }
         public DbSet<PublisherEntity> Publishers { get; set; }
         public DbSet<ReviewEntity> Reviews { get; set; }
-        public DbSet<WishlistEntity> Wishlists { get; set; }
+        //public DbSet<WishlistEntity> Wishlists { get; set; }
         public DbSet<ApplicationRole> Roles {  get; set; }
         public DbSet<ApplicationUser> IdentityUsers {  get; set; }
+        public DbSet<CartEntity> Carts { get; set; }
+        public DbSet<OrdersHistoryEntity> OrdersHistory { get; set; }
+        public DbSet<PasswordResetEntity> PasswordReset { get; set; }
     }
 }

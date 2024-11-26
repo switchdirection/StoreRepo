@@ -1,0 +1,262 @@
+﻿@using Contracts.Cart;
+
+@model List<CartItemDto>;
+
+<style>
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .item-image img {
+        width: 100px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .item-details {
+        flex-grow: 1;
+        margin-left: 15px;
+    }
+
+    .item-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #444;
+    }
+
+    .item-price {
+        margin: 5px 0;
+        color: #666;
+    }
+
+    .item-quantity {
+        display: flex;
+        align-items: center;
+    }
+
+        .item-quantity .btn-decrease,
+        .item-quantity .btn-increase {
+            background: #eee;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+            .item-quantity .btn-decrease:hover,
+            .item-quantity .btn-increase:hover {
+                background: #ddd;
+            }
+
+        .item-quantity .quantity-input {
+            width: 50px;
+            text-align: center;
+            font-size: 1rem;
+            margin: 0 10px;
+        }
+
+    .item-actions .btn-remove {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+        .item-actions .btn-remove:hover {
+            background-color: #c0392b;
+        }
+
+    .cart-summary {
+        margin-top: 20px;
+        text-align: right;
+        font-size: 1.2rem;
+        color: #444;
+    }
+
+    .cart-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+</style>
+
+@if (TempData["OrderAddedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["OrderAddedSuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (TempData["OrderAddedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["OrderAddedError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div style="padding-top: 80px;">
+    <h1>Корзина</h1>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <h2 style="color: gray;">У вас нет игр добавленных в корзину</h2>
+    }
+    else
+    {
+        <div id="cart-container">
+            @foreach (var item in Model)
+            {
+                <div class="cart-item">
+                    <div class="item-image">
+                        <img src="@item.MainImageUrl" alt="@item.Name" />
+                    </div>
+                    <div class="item-details">
+                        <h3 class="item-name">@item.Name</h3>
+                        <p class="item-price">Цена: @item.Price.ToString("C")</p>
+                        <div class="item-quantity">
+                            <button class="btn-decrease" onclick="updateQuantity('@item.Id', -1, @item.StockQuantity, @item.Price)">-</button>
+                            <input type="number"
+                                   id="quantity-@item.Id"
+                                   class="quantity-input"
+                                   value="1"
+                                   min="1"
+                                   max="@item.StockQuantity"
+                                   style="width: 70px;"
+                                   onchange="validateQuantity('@item.Id', @item.StockQuantity, @item.Price)" />
+                            <button class="btn-increase" onclick="updateQuantity('@item.Id', 1, @item.StockQuantity, @item.Price)">+</button>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <form asp-controller="Cart" asp-action="DeleteFromCart" method="post" class="form-inline">
+                            <input type="hidden" name="gameId" value="@item.Id" />
+                            <button type="submit" class="btn btn-remove">
+                                Удалить
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="cart-summary">
+            <h3>Сумма заказа: <span id="total-sum">0.00</span> Br</h3>
+            <h3>Количество товаров: <span id="total-items">0</span></h3>
+        </div>
+
+        <div class="cart-actions">
+            <form asp-controller="Order" asp-action="PlaceAnOrder" method="get" class="form-inline">
+                <input type="hidden" name="totalPrice" id="totalPrice" value="12" />
+                <button type="submit" class="btn btn-success">
+                    Оформить заказ
+                </button>
+            </form>
+            <form asp-controller="Cart" asp-action="DeleteAllFromCart" method="get" class="form-inline">
+                <button type="submit" class="btn btn-danger">
+                    Очистить корзину
+                </button>
+            </form>
+        </div>
+    }
+</div>
+
+    
+
+<script>
+
+    // Функция для изменения количества кнопками
+    function updateQuantity(itemId, change, stockQuantity) {
+        const quantityInput = document.getElementById(`quantity-${itemId}`);
+        let currentQuantity = parseInt(quantityInput.value, 10);
+        // Рассчитать новое значение
+        let newQuantity = currentQuantity + change;
+        // Убедиться, что значение в пределах допустимого диапазона
+        if (newQuantity < 1) {
+            newQuantity = 1; // Минимум 1
+        } else if (newQuantity > stockQuantity) {
+            newQuantity = stockQuantity; // Максимум stockQuantity
+        }
+        // Обновить значение в поле ввода
+        quantityInput.value = newQuantity;
+    }
+    // Функция для проверки вручную введённого значения
+    function validateQuantity(itemId, stockQuantity) {
+        const quantityInput = document.getElementById(`quantity-${itemId}`);
+        let currentQuantity = parseInt(quantityInput.value, 10);
+        // Если значение некорректное или пустое, устанавливаем минимальное значение
+        if (isNaN(currentQuantity) || currentQuantity < 1) {
+            currentQuantity = 1;
+        } else if (currentQuantity > stockQuantity) {
+            currentQuantity = stockQuantity; // Ограничиваем верхним пределом
+        }
+        // Обновляем поле с правильным значением
+        quantityInput.value = currentQuantity;
+    }
+
+    // Обновление количества и пересчёт суммы
+    function updateQuantity(itemId, change, stockQuantity, price) {
+        const quantityInput = document.getElementById(`quantity-${itemId}`);
+        let currentQuantity = parseInt(quantityInput.value, 10);
+        // Рассчитать новое значение
+        let newQuantity = currentQuantity + change;
+        // Убедиться, что значение в пределах допустимого диапазона
+        if (newQuantity < 1) newQuantity = 1;
+        if (newQuantity > stockQuantity) newQuantity = stockQuantity;
+        // Обновить значение в поле ввода
+        quantityInput.value = newQuantity;
+        // Пересчитать общие данные
+        calculateCartTotal();
+    }
+
+    function validateQuantity(itemId, stockQuantity, price) {
+        const quantityInput = document.getElementById(`quantity-${itemId}`);
+        let currentQuantity = parseInt(quantityInput.value, 10);
+        // Если значение некорректное, установить корректное
+        if (isNaN(currentQuantity) || currentQuantity < 1) {
+            currentQuantity = 1;
+        } else if (currentQuantity > stockQuantity) {
+            currentQuantity = stockQuantity;
+        }
+        quantityInput.value = currentQuantity;
+        // Пересчитать общие данные
+        calculateCartTotal();
+    }
+
+    function calculateCartTotal() {
+        let totalSum = 0;
+        let totalItems = 0;
+        const items = document.querySelectorAll('.cart-item');
+        items.forEach(item => {
+            const quantity = parseInt(item.querySelector('.quantity-input').value, 10);
+            const price = parseFloat(item.querySelector('.item-price').innerText.replace('Цена:', '').replace('Br', '').replace(',', '.').trim());
+            totalSum += quantity * price;
+            totalItems += quantity;
+        });
+        // Обновить отображение
+        document.getElementById('total-sum').innerText = totalSum.toFixed(2).replace('.', ',');
+        document.getElementById('totalPrice').value = totalSum.toFixed(2);
+        document.getElementById('total-items').innerText = totalItems;
+    }
+    // Пересчитать при загрузке страницы
+    document.addEventListener('DOMContentLoaded', calculateCartTotal);
+
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            let alert = document.querySelector('.alert');
+            if (alert) alert.classList.remove('show');
+        }, 5000);
+    });
+</script>

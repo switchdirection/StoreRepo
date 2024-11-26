@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities
+﻿/*namespace Domain.Entities
 {
     /// <summary>
     /// Пользователь
@@ -32,7 +32,7 @@
         /// <summary>
         /// Роль пользователя
         /// </summary>
-        public string? Role { get; set; }
+        public string? Role { get; set; } = "user";
         /// <summary>
         /// Списко желаемых игр
         /// </summary>
@@ -48,3 +48,4 @@
         public decimal WalletBalance { get; set; } = 0;
     }
 }
+*/

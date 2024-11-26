@@ -12,7 +12,11 @@
         /// <summary>
         /// Идентификатор пользователя
         /// </summary>
-        public UserEntity? UserId { get; set; }
+        public int UserId { get; set; }
+        /// <summary>
+        /// Пользователя
+        /// </summary>
+        public ApplicationUser? User { get; set; }
         /// <summary>
         /// Цена заказа
         /// </summary>
@@ -20,14 +24,14 @@
         /// <summary>
         /// Список заказанных игр
         /// </summary>
-        public GameEntity[]? GameId { get; set; } = [];
+        public List<GameEntity> Games { get; set; } = [];
         /// <summary>
         /// Статус заказа
         /// </summary>
-        public string Status { get; set; } = default!;
+        public string Status { get; set; } = "В обработке";
         /// <summary>
         /// Дата заказа
         /// </summary>
-        public DateTime PurchaseDate { get; set;}
+        public DateTime PurchaseDate { get; set; } = default!;
     }
 }

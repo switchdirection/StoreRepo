@@ -11,37 +11,99 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<GameEntity> builder)
         {
+            //Имя таблицы
+            builder.ToTable("Games");
+
+            //=============Свойства============
             //Идентификатор игры
             builder
                 .HasKey(g => g.Id);
+
+            builder
+                .Property(g => g.Title)
+                .HasColumnName("title")
+                .IsRequired(true);
+
+            builder
+                .Property(g => g.Description)
+                .HasColumnName("description")
+                .IsRequired(false);
+
+            builder
+                .Property(g => g.Price)
+                .HasColumnName("price")
+                .IsRequired(true);
+
+            builder
+                .Property(g => g.ReleaseDate)
+                .HasColumnName("releasedate")
+                .IsRequired(true);
+
+            builder
+                .Property(g => g.Rating)
+                .HasColumnName("rating")
+                .IsRequired(true);
+
+            //==============Связи==============
             //Связь многие ко многим, 1 разработчик может выпустить несколько игр, 1 игра может быть выпущена несколькими разработчиками
             builder
-                .HasMany(g => g.DeveloperId)
-                .WithMany(d => d.GameId);
+                .HasMany(g => g.Developers)
+                .WithMany(d => d.Games);
             //Свзяь многие ко многим, 1 издатель может выпустить несколько игр, 1 игра может быть выпущена несколькими издателями
             builder
-                .HasMany(g => g.PublisherId)
-                .WithMany(p => p.GameId);
+                .HasMany(g => g.Publishers)
+                .WithMany(p => p.Games);
             //Свзяь многие ко многим, 1 заказ может включать несколько игр, 1 игра может быть включена во множество заказов
             builder
-                .HasMany(g => g.OrderId)
-                .WithMany(o => o.GameId);
+                .HasMany(g => g.Orders)
+                .WithMany(o => o.Games);
             //Связь многие ко многим, 1 игра может иметь несколько категорий, 1 категория может подходить под множество игр
             builder
-                .HasMany(g => g.CategoryId)
+                .HasMany(g => g.Categories)
                 .WithMany(c => c.GameId);
             //Связь многие ко многим, 1 платформа может подходить под множество игр, 1 игра может подходить под множество платформ
             builder
-                .HasMany(g => g.PlatformId)
-                .WithMany(p => p.GameId);
+                .HasMany(g => g.Platforms)
+                .WithMany(p => p.Games);
             //Связь многие ко многим, 1 игра может находиться во множетсве списков желаемого, 1 список желаемых игр может включать множество игр
-            builder
-                .HasMany(g => g.WishlistId)
-                .WithMany(w => w.GameId);
+            /*builder
+                .HasMany(g => g.Wishlists)
+                .WithMany(w => w.GameId);*/
             //Связь 1 ко многим, 1 игра может включать множество картинок 
             builder
                 .HasMany(g => g.Images)
-                .WithOne(i => i.GameId);
+                .WithOne(i => i.Game);
+
+
+            //=================Данные================
+            /*builder
+                .HasData(new GameEntity
+                {
+                    Id = 1,
+                    Title = "Need For Speed",
+                    Description = "Прикольные гоночки",
+                    Price = 14.99,
+                    ReleaseDate = DateTime.UtcNow.AddDays(25),
+                    Rating = 5
+                },
+                new GameEntity
+                {
+                    Id = 2,
+                    Title = "Assasin Creed",
+                    Description = "Что-то про мужика который прыгает по крышам",
+                    Price = 59.99,
+                    ReleaseDate = DateTime.UtcNow.AddDays(20),
+                    Rating = 4.7
+                },
+                new GameEntity
+                {
+                    Id = 3,
+                    Title = "Call Of Duty",
+                    Description = "Что-то про мужиков которые стреляют",
+                    Price = 14.99,
+                    ReleaseDate = DateTime.UtcNow.AddDays(11),
+                    Rating = 4.9
+                });*/
         }
     }
 }

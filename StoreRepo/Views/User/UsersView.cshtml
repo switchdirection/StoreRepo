@@ -1,0 +1,379 @@
+﻿@using Contracts.Users
+@model List<UserDto>
+
+@{
+    ViewData["Title"] = "Users";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+@if (TempData["UserDeletedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserDeletedSuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (TempData["UserDeletedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserDeletedError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["UserEditedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserEditedSuccess"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+}
+else if (TempData["UserEditedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserEditedError"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+}
+
+@if (TempData["UserAddedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserAddedSuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (TempData["UserAddedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["UserAddedError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+}
+
+<div class="container my-4" style="padding-top: 50px;">
+    <h2 class="text-left mb-4">Пользователи</h2>
+
+    <div class="mb-3">
+        <label for="roleFilter" class="form-label">Фильтр по роли:</label>
+        <select id="roleFilter" class="form-select">
+            <option value="">Все роли</option>
+            <option value="moderator">Moderator</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+    </div>
+
+    <table class="table table-striped table-bordered shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col" class="text-center">Id</th>
+                <th scope="col" class="text-center">Имя</th>
+                <th scope="col" class="text-center">Email</th>
+                <th scope="col" class="text-center">Номер телефона</th>
+                <th scope="col" class="text-center">Роли</th>
+                <th scope="col" class="text-center">Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var user in Model)
+                {
+                    <tr class="user-row" data-roles="@string.Join(",", user.Roles)">
+                        <td class="text-center align-middle">@user.Id</td>
+                        <td class="text-center align-middle">@user.Name</td>
+                        <td class="text-center align-middle">@user.Email</td>
+                        @if (@user.PhoneNumber == null)
+                        {
+                            <td class="text-center align-middle">Не указан</td>
+                        }
+                        else
+                        {
+                            <td class="text-center align-middle">@user.PhoneNumber</td>
+                        }
+                        <td class="text-center align-middle">@string.Join(", ", user.Roles)</td>
+                        <td class="text-center align-middle d-flex justify-content-center gap-2">
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-user-id="@user.Id">
+                                Удалить
+                            </button>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editUserModal"
+                                    data-user-id="@user.Id" data-user-name="@user.Name" data-user-email="@user.Email"
+                                    data-user-phone="@user.PhoneNumber" data-user-roles="@string.Join(", ", user.Roles)">
+                                Редактировать
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center">История заказов пуста</td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+
+    <!-- Сообщение, если не найдено пользователей с выбранной ролью -->
+    <div id="noUsersMessage" class="text-center text-muted mt-3" style="display: none;">
+        Пользователей с данной ролью не существует
+    </div>
+
+    <!-- Кнопка для открытия модального окна -->
+    <div class="d-flex justify-start mt-4">
+        <button type="button" class="btn btn-primary btn-lg shadow" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            Добавить пользователя
+        </button>
+    </div>
+</div>
+
+<!-- Модальное окно для добавления пользователя -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Добавить пользователя</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" method="post" onsubmit="return validateForm()">
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Имя</label>
+                        <input type="text" class="form-control" id="Name" name="Name" required pattern="[A-Za-z0-9]+"
+                               title="Только английские буквы и цифры">
+                        <small id="nameError" class="text-danger"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Email" class="form-label">Электронная почта</label>
+                        <input type="email" class="form-control" id="Email" name="Email" required>
+                        <small id="emailError" class="text-danger"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Password" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" id="Password" name="Password" required>
+                        <small id="passwordError" class="text-danger"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ConfirmPassword" class="form-label">Подтверждение пароля</label>
+                        <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" required>
+                        <small id="confirmPasswordError" class="text-danger"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="PhoneNumber" class="form-label">Номер телефона (необязательно)</label>
+                        <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для подтверждения удаления -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Подтверждение удаления</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                Вы точно хотите удалить этого пользователя?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" asp-action="Delete" method="post" class="d-none">
+                    <input type="hidden" id="userId" name="userId" value="" />
+                </form>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Да</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования пользователя -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Редактировать пользователя</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm" asp-action="Edit" method="post" onsubmit="return validateRolesSelection()">
+                    <input type="hidden" id="editUserId" name="Id" />
+                    <div class="mb-3">
+                        <label for="editUserName" class="form-label">Имя</label>
+                        <input type="text" class="form-control" id="editUserName" name="Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editUserEmail" name="Email" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserPhone" class="form-label">Номер телефона</label>
+                        <input type="text" class="form-control" id="editUserPhone" name="PhoneNumber" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Роли</label>
+                        <div>
+                            <input type="checkbox" id="roleModerator" name="Roles" value="moderator" class="form-check-input">
+                            <label for="roleModerator" class="form-check-label">Moderator</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="roleUser" name="Roles" value="user" class="form-check-input">
+                            <label for="roleUser" class="form-check-label">User</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="roleAdmin" name="Roles" value="admin" class="form-check-input">
+                            <label for="roleAdmin" class="form-check-label">Admin</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var deleteButtons = document.querySelectorAll("[data-bs-toggle='modal']");
+
+        deleteButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                var userId = button.getAttribute("data-user-id");
+                document.getElementById("userId").value = userId; // Устанавливаем ID пользователя в скрытое поле
+            });
+        });
+
+        // Обработчик для кнопки "Да" — отправляет форму
+        document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
+            document.getElementById("deleteForm").submit();  // Отправляем форму на сервер
+        });
+    });
+
+    var editUserModal = document.getElementById('editUserModal');
+    editUserModal.addEventListener('show.bs.modal', function (event) {
+        // Кнопка, вызвавшая модальное окно
+        var button = event.relatedTarget;
+
+        // Получаем данные пользователя из атрибутов кнопки
+        var userId = button.getAttribute('data-user-id');
+        var userName = button.getAttribute('data-user-name');
+        var userEmail = button.getAttribute('data-user-email');
+        var userPhone = button.getAttribute('data-user-phone') || '';
+        var userRoles = button.getAttribute('data-user-roles').split(", ");
+
+        // Устанавливаем значения полей в модальном окне
+        document.getElementById('editUserId').value = userId;
+        document.getElementById('editUserName').value = userName;
+        document.getElementById('editUserEmail').value = userEmail;
+        document.getElementById('editUserPhone').value = userPhone;
+
+        // Устанавливаем чекбоксы для ролей
+        document.getElementById('roleModerator').checked = userRoles.includes("moderator");
+        document.getElementById('roleUser').checked = userRoles.includes("user");
+        document.getElementById('roleAdmin').checked = userRoles.includes("admin");
+    });
+
+    function validateRolesSelection() {
+        const roleCheckboxes = document.querySelectorAll('input[name="Roles"]');
+        const isAnyRoleSelected = Array.from(roleCheckboxes).some(checkbox => checkbox.checked);
+
+        if (!isAnyRoleSelected) {
+            alert("Должна быть выбрана хотя бы одна роль.");
+            return false;
+        }
+        return true; 
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            let alert = document.querySelector('.alert');
+            if (alert) alert.classList.remove('show');
+        }, 5000); // Закрыть через 5 секунд
+    });
+
+    // Получаем выпадающий список и добавляем обработчик события
+    document.getElementById('roleFilter').addEventListener('change', function () {
+        var selectedRole = this.value.toLowerCase();
+        var rows = document.querySelectorAll('.user-row');
+        var anyVisible = false;
+
+        rows.forEach(row => {
+            // Получаем роли пользователя из атрибута data-roles
+            var roles = row.getAttribute('data-roles').toLowerCase();
+
+            // Показываем или скрываем строки, основываясь на выбранной роли
+            if (selectedRole === "" || roles.includes(selectedRole)) {
+                row.style.display = "";
+                anyVisible = true;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        // Показать или скрыть сообщение о том, что нет пользователей с данной ролью
+        document.getElementById('noUsersMessage').style.display = anyVisible ? "none" : "block";
+    });
+
+    function validateForm() {
+        const name = document.getElementById('Name').value;
+        const email = document.getElementById('Email').value;
+        const password = document.getElementById('Password').value;
+        const confirmPassword = document.getElementById('ConfirmPassword').value;
+
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+        let isValid = true;
+
+        const nameRegex = /^[A-Za-z0-9]+$/;
+        if (!nameRegex.test(name)) {
+            nameError.textContent = 'Имя должно содержать только английские буквы и цифры.';
+            isValid = false;
+        } else {
+            nameError.textContent = '';
+        }
+
+        const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        if (!emailRegex.test(email)) {
+            emailError.textContent = 'Введите корректный email.';
+            isValid = false;
+        } else {
+            emailError.textContent = '';
+        }
+
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@@#$%^&*])(?=(.*[a-z]){6}).+$/;
+        if (!passwordRegex.test(password)) {
+            passwordError.textContent = 'Пароль должен содержать минимум 1 заглавную букву, цифру, спецсимвол и минимум 6 строчных букв.';
+            isValid = false;
+        } else {
+            passwordError.textContent = '';
+        }
+
+        
+        if (password !== confirmPassword) {
+            confirmPasswordError.textContent = 'Пароли не совпадают.';
+            isValid = false;
+        } else {
+            confirmPasswordError.textContent = '';
+        }
+
+        return isValid;
+    }
+</script>

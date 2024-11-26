@@ -7,22 +7,22 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class NewDataBaseAndFirstUser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categoryes",
+                name: "Categories",
                 columns: table => new
                 {
                     CategoryId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CategoryName = table.Column<string>(type: "text", nullable: true)
+                    categoryname = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categoryes", x => x.CategoryId);
+                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -31,8 +31,8 @@ namespace DataAccess.Migrations
                 {
                     DeveloperId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DeveloperName = table.Column<string>(type: "text", nullable: true),
-                    WebsiteUrl = table.Column<string>(type: "text", nullable: false)
+                    developername = table.Column<string>(type: "text", nullable: false),
+                    url = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -45,11 +45,11 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Price = table.Column<double>(type: "double precision", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Rating = table.Column<decimal>(type: "numeric", nullable: false)
+                    title = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    price = table.Column<double>(type: "double precision", nullable: false),
+                    releasedate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    rating = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,34 +57,34 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Platforms",
+                name: "Platform",
                 columns: table => new
                 {
                     PlatformId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PlatformName = table.Column<string>(type: "text", nullable: true)
+                    platformname = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Platforms", x => x.PlatformId);
+                    table.PrimaryKey("PK_Platform", x => x.PlatformId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Publishers",
+                name: "Publisher",
                 columns: table => new
                 {
                     PublisherId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PublisherName = table.Column<string>(type: "text", nullable: true),
-                    WebsiteUrl = table.Column<string>(type: "text", nullable: false)
+                    publishername = table.Column<string>(type: "text", nullable: false),
+                    url = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Publishers", x => x.PublisherId);
+                    table.PrimaryKey("PK_Publisher", x => x.PublisherId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Wishlists",
+                name: "Wishlist",
                 columns: table => new
                 {
                     WishlistId = table.Column<int>(type: "integer", nullable: false)
@@ -93,7 +93,7 @@ namespace DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Wishlists", x => x.WishlistId);
+                    table.PrimaryKey("PK_Wishlist", x => x.WishlistId);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,9 +107,9 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_CategoryEntityGameEntity", x => new { x.CategoryId, x.GameIdId });
                     table.ForeignKey(
-                        name: "FK_CategoryEntityGameEntity_Categoryes_CategoryId",
+                        name: "FK_CategoryEntityGameEntity_Categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Categoryes",
+                        principalTable: "Categories",
                         principalColumn: "CategoryId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -150,7 +150,7 @@ namespace DataAccess.Migrations
                 {
                     ImageId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ImageUrl = table.Column<string>(type: "text", nullable: false),
+                    imageurl = table.Column<string>(type: "text", nullable: false),
                     GameIdId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -180,9 +180,9 @@ namespace DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GameEntityPlatformEntity_Platforms_PlatformId",
+                        name: "FK_GameEntityPlatformEntity_Platform_PlatformId",
                         column: x => x.PlatformId,
-                        principalTable: "Platforms",
+                        principalTable: "Platform",
                         principalColumn: "PlatformId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -204,9 +204,9 @@ namespace DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GameEntityPublisherEntity_Publishers_PublisherId",
+                        name: "FK_GameEntityPublisherEntity_Publisher_PublisherId",
                         column: x => x.PublisherId,
-                        principalTable: "Publishers",
+                        principalTable: "Publisher",
                         principalColumn: "PublisherId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -228,9 +228,9 @@ namespace DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GameEntityWishlistEntity_Wishlists_WishlistId",
+                        name: "FK_GameEntityWishlistEntity_Wishlist_WishlistId",
                         column: x => x.WishlistId,
-                        principalTable: "Wishlists",
+                        principalTable: "Wishlist",
                         principalColumn: "WishlistId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -241,11 +241,11 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserName = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    CreateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Role = table.Column<string>(type: "text", nullable: true),
+                    username = table.Column<string>(type: "text", nullable: false),
+                    email = table.Column<string>(type: "text", nullable: false),
+                    password = table.Column<string>(type: "text", nullable: false),
+                    createat = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    role = table.Column<string>(type: "text", nullable: false),
                     Wishlistid = table.Column<int>(type: "integer", nullable: false),
                     WalletBalance = table.Column<decimal>(type: "numeric", nullable: false)
                 },
@@ -253,9 +253,9 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Wishlists_Wishlistid",
+                        name: "FK_Users_Wishlist_Wishlistid",
                         column: x => x.Wishlistid,
-                        principalTable: "Wishlists",
+                        principalTable: "Wishlist",
                         principalColumn: "WishlistId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -267,9 +267,9 @@ namespace DataAccess.Migrations
                     OrderId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserIdId = table.Column<int>(type: "integer", nullable: true),
-                    TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false),
-                    PurchaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    totalorderprice = table.Column<decimal>(type: "numeric", nullable: false),
+                    status = table.Column<string>(type: "text", nullable: false),
+                    purchasedate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -282,27 +282,27 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
+                name: "Review",
                 columns: table => new
                 {
                     ReviewId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserIdId = table.Column<int>(type: "integer", nullable: true),
                     GameIdId = table.Column<int>(type: "integer", nullable: true),
-                    Rating = table.Column<int>(type: "integer", nullable: false),
-                    ReviewText = table.Column<string>(type: "text", nullable: true),
-                    ReviewDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    rating = table.Column<int>(type: "integer", nullable: false),
+                    reviewtext = table.Column<string>(type: "text", nullable: false),
+                    reviewdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviews", x => x.ReviewId);
+                    table.PrimaryKey("PK_Review", x => x.ReviewId);
                     table.ForeignKey(
-                        name: "FK_Reviews_Games_GameIdId",
+                        name: "FK_Review_Games_GameIdId",
                         column: x => x.GameIdId,
                         principalTable: "Games",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Reviews_Users_UserIdId",
+                        name: "FK_Review_Users_UserIdId",
                         column: x => x.UserIdId,
                         principalTable: "Users",
                         principalColumn: "Id");
@@ -331,6 +331,16 @@ namespace DataAccess.Migrations
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Wishlist",
+                columns: new[] { "WishlistId", "UserId" },
+                values: new object[] { 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "createat", "email", "password", "role", "username", "WalletBalance", "Wishlistid" },
+                values: new object[] { 1, new DateTime(2024, 10, 1, 12, 18, 22, 765, DateTimeKind.Utc).AddTicks(5289), "swwtdirrexamplemail@gmail.com", "", "user", "swwtdirr", 100m, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryEntityGameEntity_GameIdId",
@@ -373,13 +383,13 @@ namespace DataAccess.Migrations
                 column: "UserIdId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_GameIdId",
-                table: "Reviews",
+                name: "IX_Review_GameIdId",
+                table: "Review",
                 column: "GameIdId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_UserIdId",
-                table: "Reviews",
+                name: "IX_Review_UserIdId",
+                table: "Review",
                 column: "UserIdId");
 
             migrationBuilder.CreateIndex(
@@ -414,10 +424,10 @@ namespace DataAccess.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
-                name: "Reviews");
+                name: "Review");
 
             migrationBuilder.DropTable(
-                name: "Categoryes");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Developers");
@@ -426,10 +436,10 @@ namespace DataAccess.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Platforms");
+                name: "Platform");
 
             migrationBuilder.DropTable(
-                name: "Publishers");
+                name: "Publisher");
 
             migrationBuilder.DropTable(
                 name: "Games");
@@ -438,7 +448,7 @@ namespace DataAccess.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Wishlists");
+                name: "Wishlist");
         }
     }
 }

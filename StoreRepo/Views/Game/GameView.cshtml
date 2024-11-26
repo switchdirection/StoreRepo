@@ -1,0 +1,236 @@
+﻿@using Contracts.Games
+@model List<ShortGameList>
+
+
+<style>
+    .table {
+        border-radius: 10px;
+        overflow: hidden; /* Чтобы углы внутри таблицы не выходили за закругления */
+    }
+
+        .table thead {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .table tbody tr:last-child {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+</style>
+
+@if (TempData["GameAdded"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3 fixed-top" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["GameAdded"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["GameDeleted"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3 fixed-top" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["GameDeleted"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["GameUpdatedSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3 fixed-top" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["GameUpdatedSuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["GameUpdatedError"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3 fixed-top" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+        @TempData["GameUpdatedError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="container my-4" style="padding-top: 70px; margin-left: -150px;">
+    <h2 class="text-left mb-4">Игры</h2>
+
+    <table class="table table-striped table-bordered shadow-sm" >
+        <thead class="table-dark">
+            <tr>
+                <th scope="col" class="text-center">Id</th>
+                <th scope="col" class="text-center">Название</th>
+                <th scope="col" class="text-center">Описание</th>
+                <th scope="col" class="text-center">Количество в наличии</th>
+                <th scope="col" class="text-center">Цена</th>
+                <th scope="col" class="text-center">Категории</th>
+                <th scope="col" class="text-center">Разработчики</th>
+                <th scope="col" class="text-center">Издатели</th>
+                <th scope="col" class="text-center">Платформы</th>
+                <th scope="col" class="text-center">Рейтинг</th>
+                <th scope="col" class="text-center">IsDeleted</th>
+                <th scope="col" class="text-center">Главное изображение</th>
+                <th scope="col" class="text-center">Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+             @if (Model != null && Model.Any())
+            {
+                @foreach (var game in Model)
+                {
+                    <tr>
+                        <td class="text-center align-middle">@game.Id</td>
+                        <td class="text-center align-middle">@game.Title</td>
+                        <td class="text-center align-middle">@game.Description</td>
+                        <td class="text-center align-middle">@game.StockQuantity</td>
+                        <td class="text-center align-middle">@game.Price.ToString("C")</td>
+                        <td class="text-center align-middle">@string.Join(", ", game.Categories.Select(c => c.CategoryName))</td>
+                        <td class="text-center align-middle">@string.Join(", ", game.Developers.Select(d => d.DeveloperName))</td>
+                        <td class="text-center align-middle">@string.Join(", ", game.Publishers.Select(p => p.PublisherName))</td>
+                        <td class="text-center align-middle">@string.Join(", ", game.Platforms.Select(p => p.PlatformName))</td>
+                        <td class="text-center align-middle">@game.Rating</td>
+                        @if (game.IsDeleted)
+                        {
+                            <td class="text-center align-middle">Да</td>
+                        }
+                        else
+                        {
+                            <td class="text-center align-middle">Нет</td>
+                        }
+                        <td class="text-center align-middle">
+                            <img src="@game.ImageUrl" alt="Главное изображение" style="width: 100px; height: auto;" />
+                        </td>
+                        <td class="text-center align-middle">
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                @if (game.IsDeleted)
+                                {
+                                    <form asp-controller="Game" asp-action="ChangeVisibility" method="get" class="form-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary" name="id" value="@game.Id">
+                                            Показать
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Game" asp-action="ChangeVisibility" method="get" class="form-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" name="id" value="@game.Id">
+                                            Скрыть
+                                        </button>
+                                    </form>
+
+                                }
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-game-id="@game.Id">
+                                    Удалить
+                                </button>
+                                <form asp-controller="Game" asp-action="GameEditView" asp-route-id="@game.Id" method="get">
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        Редактировать
+                                    </button>
+                                </form>
+                                
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="13" class="text-center">Список игр пуст</td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-start align-items-center gap-2">
+        <form asp-controller="Game" asp-action="AddGame" method="get" class="form-inline">
+            <button type="submit" class="btn btn-primary">
+                Добавить продукт
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Модальное окно для подтверждения удаления -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Подтверждение удаления</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                Вы точно хотите удалить этот продукт?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" asp-action="Delete" method="get" class="d-none">
+                    <input type="hidden" id="gameId" name="gameId" value="" />
+                </form>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Да</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    document.getElementById('addCategoryButton').addEventListener('click', function () {
+        const categoryName = document.getElementById('categoryName').value;
+
+        if (!categoryName.trim()) {
+            alert('Введите название категории!');
+            return;
+        }
+        fetch('/Game/AddCategory', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ categoryName: categoryName })
+        })
+    });
+
+    document.getElementById('addDeveloperButton').addEventListener('click', function () {
+        const developerName = document.getElementById('developerName').value;
+        const developerWebsite = document.getElementById('developerWebsite').value || "Не указан";
+
+        if (!developerName.trim()) {
+            alert('Введите название разработчика!');
+            return;
+        }
+        fetch('/Game/AddDeveloper', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                developerName: developerName,
+                developerWebsite: developerWebsite
+            })
+        })
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var deleteButtons = document.querySelectorAll("[data-bs-toggle='modal']");
+
+        deleteButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                var gameId = button.getAttribute("data-game-id");
+                document.getElementById("gameId").value = gameId; // Устанавливаем ID пользователя в скрытое поле
+            });
+        });
+
+        // Обработчик для кнопки "Да" — отправляет форму
+        document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
+            document.getElementById("deleteForm").submit();  // Отправляем форму на сервер
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            let alert = document.querySelector('.alert');
+            if (alert) alert.classList.remove('show');
+        }, 5000); // Закрыть через 5 секунд
+    });
+</script>

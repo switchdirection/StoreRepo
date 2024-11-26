@@ -1,0 +1,147 @@
+﻿@using Contracts.Games
+@model ShortGameList
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+</head>
+    <body>
+        <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">@Model.Title</h5>
+        </div>
+        <div class="modal-body d-flex gap-2" >
+            <!-- Левая часть с изображением и миниатюрами -->
+            <div class="left-side mr-4" style="flex: 1;">
+                <!-- Карусель для изображений -->
+                <div id="mainImageCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <!-- Главное изображение -->
+                        <div class="carousel-item active">
+                            <img src="@Model.ImageUrl" alt="Основное изображение" class="d-block w-100 img-fluid rounded border">
+                        </div>
+
+                        <!-- Остальные изображения из ImageUrls -->
+                        @for (int i = 0; i < Model.ImagesUrls.Length; i++)
+                        {
+                            <div class="carousel-item">
+                                <img src="@Model.ImagesUrls[i]" alt="Дополнительное изображение" class="d-block w-100 img-fluid rounded border">
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Стрелки переключения карусели -->
+                    <a class="carousel-control-prev custom-carousel-control" href="#mainImageCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span> <!-- Левая стрелка -->
+                        <span class="sr-only"></span>
+                    </a>
+                    <a class="carousel-control-next custom-carousel-control" href="#mainImageCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span> <!-- Правая стрелка -->
+                        <span class="sr-only"></span>
+                    </a>
+                </div>
+
+                <!-- Миниатюры изображений -->
+                <div id="thumbnailContainer" class="d-flex flex-wrap mt-3">
+                    <!-- Миниатюра для главного изображения -->
+                    <img src="@Model.ImageUrl" class="img-thumbnail mr-1 mb-1 rounded" style="width: 70px; cursor: pointer;" onclick="changeCarouselImage('@Model.ImageUrl')" />
+
+                    <!-- Миниатюры для остальных изображений -->
+                    @foreach (var image in Model.ImagesUrls)
+                    {
+                        <img src="@image" class="img-thumbnail mr-1 mb-1 rounded" style="width: 70px; cursor: pointer;" onclick="changeCarouselImage('@image')" />
+                    }
+                </div>
+            </div>
+            <!-- Правая часть с информацией о товаре -->
+            <div class="right-side" style="flex: 2;">
+                <h5 class="text mb-3"><strong>Детали о продукте</strong></h5>
+                <p><strong>Цена:</strong> <span class="text">@Model.Price.ToString("C")</span></p>
+
+                <div class="mb-3">
+                    <p class="mb-1"><strong>Описание:</strong> @Model.Description</p>
+                </div>
+
+                @if(Model.Categories.Count == 0)
+                {
+                    <p><strong>Категории:</strong> <span class="text-muted">Неизвестны</span></p>
+                }
+                else
+                {
+                    <p><strong>Категории:</strong> <span class="text-muted">@string.Join(", ", Model.Categories.Select(c => c.CategoryName))</span></p>
+                }
+                @if(Model.Developers.Count == 0)
+                {
+                    <p><strong>Разработчики:</strong> <span class="text-muted">Неизвестны</span></p>
+                }
+                else
+                {
+                    <p><strong>Производитель:</strong> <span class="text-muted">@string.Join(", ", Model.Developers.Select(d => d.DeveloperName))</span></p>
+                }
+        
+                @if(Model.Publishers.Count == 0)
+                {
+                    <p><strong>Издатели:</strong> <span class="text-muted">Неизвестны</span></p>
+                }
+                else
+                {
+                    <p><strong>Издатели:</strong> <span class="text-muted">@string.Join(", ", Model.Publishers.Select(p => p.PublisherName))</span></p>
+                }
+                @if(Model.Platforms.Count == 0)
+                {
+                    <p><strong>Платформы:</strong> <span class="text-muted">Неизвестны</span></p>
+                }
+                else
+                {
+                    <p><strong>Платформы:</strong> <span class="text-muted">@string.Join(", ", Model.Platforms.Select(p => p.PlatformName))</span></p>
+                }
+            </div>
+        </div>
+
+        <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="addToCart('@Model.Id')">В корзину</button>
+            <button class="btn btn-danger" onclick="closeModal()">Назад</button>
+        </div>
+    </body>
+</html>
+
+<script>
+    function changeCarouselImage(imageUrl) {
+        const items = document.querySelectorAll('#mainImageCarousel .carousel-item');
+        items.forEach((item, index) => {
+            if (item.querySelector('img').src === imageUrl) {
+                $('#mainImageCarousel').carousel(index);
+            }
+        });
+    }
+
+    function addToCart(gameId) {
+        fetch('/Home/AddToCart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ gameId: gameId }),
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Товар успешно добавлен в корзину!")
+                } else {
+                    alert("Товар не был добавлен в корзину!")
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+    }
+
+    function changeMainImage(imageUrl) {
+        document.getElementById("mainImage").src = imageUrl;
+    }
+
+    function closeModal() {
+        $('#productModal').modal('hide'); // Закрытие модального окна с помощью Bootstrap
+    }
+</script>

@@ -1,0 +1,198 @@
+﻿@model double;
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформить заказ</title>
+    <style>
+        body {
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-details {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .inline-label{
+            display: inline-block;
+            margin: 20px 20px 0 20px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    
+
+    <div class="container" style="font-family: Arial, sans-serif;">
+        <h2>Оформление заказа</h2>
+        <form method="post" class="form-inline">
+            <label for="input-name">Имя</label>
+            <input type="text" placeholder="Введите имя" id="input-name" />
+
+            <label for="input-lastname">Фамилия</label>
+            <input type="text" placeholder="Введите фамилию" id="input-lastname" />
+
+            <label for="input-surname">Отчество</label>
+            <input type="text" placeholder="Введите отчество" id="input-surname" />
+
+            <label for="pay-method">Способ оплаты:</label>
+            <select id="pay-method" name="pay-method" onchange="toggleCardDetails()">
+                <option value="Банковской картой">Банковской картой</option>
+                <option value="Другой способ оплаты (в разработке)">Другой способ оплаты (в разработке)</option>
+            </select>
+
+            <div id="card-details" style="margin-top: 20px;">
+                <div style="max-width: 360px; margin: 0 auto; position: relative;">
+                    <label for="card-number" style="display: block;">Номер карты</label>
+                    <input type="text" placeholder="Введите номер карты" id="card-number" style="width: 100%; padding: 10px; margin-bottom: 15px;" />
+                    <div style="display: inline-block;">
+                        <div style="float: left;">
+                            <input type="text" placeholder="MM" id="card-expiry-mm" style="width: 50px; text-align: center;" />
+                            <span style="font-size: 24px; font-weight: bold;">/</span>
+                            <input type="text" placeholder="ГГ" id="card-expiry-yy" style="width: 50px; padding: 10px; text-align: center;" />
+                        </div>
+                        <input type="text" placeholder="CVC" id="card-cvc" style="width: 60px; padding: 10px; margin-left: 15px; text-align: center; position: absolute; right: 0; " />
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="totalPrice" name="totalPrice" value="@Model"/>
+            <button type="submit" class="btn btn-success" style="margin-top: 20px" onclick="confirmOrder(event)">
+                Оформить заказ
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function confirmOrder(event) {
+            event.preventDefault();
+
+            var userName = document.getElementById('input-name').value;
+            var userLastname = document.getElementById('input-lastname').value;
+            var userSurname = document.getElementById('input-surname').value;
+            var paymentType = document.getElementById('pay-method').value;
+            var cardNumber = document.getElementById('card-number').value;
+            var cardExpiry = document.getElementById('card-expiry-mm').value + '/' + document.getElementById('card-expiry-yy').value;
+            var cardCvc = document.getElementById('card-cvc').value;
+            var totalPrice = document.getElementById('totalPrice').value.replace(',', '.');
+
+            console.log(totalPrice);
+
+            if (cardExpiry === "/") {
+                cardExpiry = "Выбран другой способ оплаты";
+            }
+
+            fetch('/Order/ConfirmOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    userName: userName,
+                    userLastname: userLastname,
+                    userSurname: userSurname,
+                    paymentType: paymentType,
+                    cardNumber: cardNumber || "Выбран другой спопсоб оплаты",
+                    cardExpiry: cardExpiry,
+                    cardCvc: cardCvc || "Выбран другой спопсоб оплаты",
+                    totalPrice: parseFloat(totalPrice).toFixed(2)
+                }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '../Cart/ShowCart?';
+                    } else {
+                        window.location.href = '../Cart/ShowCart?';
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                });
+
+            fetch('/Cart/ShowCart', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+        }
+
+
+        function toggleCardDetails() {
+            const payMethod = document.getElementById('pay-method').value;
+            const cardDetails = document.getElementById('card-details');
+            document.getElementById('card-number').value = "";
+            document.getElementById('card-expiry-mm').value = "";
+            document.getElementById('card-expiry-yy').value = "";
+            document.getElementById('card-cvc').value = "";
+            
+
+
+            if (payMethod === 'bankCard') {
+                cardDetails.classList.remove('hidden');
+            } else {
+                cardDetails.classList.add('hidden');
+            }
+        }
+
+       
+    </script>
+</body>
+</html>

@@ -7,12 +7,47 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StoreRepo.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">StoreRepo</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Steam</a>
+                @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("admin"))
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-danger dropdown-toggle" type="button" id="adminMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            Админ меню
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="adminMenuButton">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Game" asp-action="ShowGames">Игры</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Role" asp-action="Roles">Роли</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="User" asp-action="ShowUsers">Пользователи</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Order" asp-action="ShowOrdersHistory">История заказов</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Category" asp-action="ShowCategories">Категории</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Platform" asp-action="ShowPlatforms">Платформы</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Developer" asp-action="ShowDevelopers">Разработчики</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Publisher" asp-action="ShowPublishers">Издатели</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,13 +55,68 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+                        </li>                   
                     </ul>
                 </div>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav" style="margin-right: 20px;">
+                <ul class="navbar-nav ml-auto">
+                    
+                    @if (User?.Identity?.IsAuthenticated == true)
+                    {
+                        <li class="nav-item">
+                            <form asp-controller="Cart" asp-action="ShowCart" method="get" class="form-inline">
+                                <button type="submit" class="btn btn-success" style="margin-right: 5px; margin-top:2px;">
+                                    Корзина
+                                </button>
+                            </form>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle btn btn-danger text-white" href="#" id="userMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Меню
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Profile">Личный кабинет</a>
+                                </li>
+                                <li>
+                                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            Выход
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#loginModal" style="margin-right: 5px;">
+                                Корзина
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal" style="margin-right: 5px;">
+                                Вход
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#registerModal" style="margin-right: 5px;">
+                                Регистрация
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Password" asp-action="ChangePasswordView">
+                                <button type="submit" class="btn btn-outline-secondary text-nowrap"style="margin-right: 5px;">
+                                    Сбросить пароль
+                                </button>
+                            </form>
+                            
+                        </li>
+                    }
+                </ul>
             </div>
         </nav>
     </header>
@@ -36,14 +126,152 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted" style="border-top: none;">
         <div class="container">
-            &copy; 2024 - StoreRepo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - StoreRepo - <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
         </div>
     </footer>
+
+    <!-- Модальные окна -->
+    <!-- Модальное окно для входа -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Вход</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="loginFormContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для регистрации -->
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Регистрация</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="registerFormContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        $('.close').on('click', function () {
+            $('.modal').modal('hide');
+            $('.modal').on('hidden.bs.modal', function () {
+                $('body').removeClass('modal-open');
+            });
+        });
+
+        
+
+        $(document).ready(function () {
+            // Загрузка формы входа
+            $('#loginModal').on('show.bs.modal', function () {
+                $.ajax({
+                    url: '@Url.Action("Login", "Account")',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#loginFormContainer').html(data);
+
+                        // Привязка обработчика для ссылки "Зарегистрироваться"
+                        $('#toRegister').on('click', function (e) {
+                            e.preventDefault();
+                            $('#loginModal').modal('hide'); // Стандартный метод Bootstrap
+                            $('#loginModal').removeClass('show').hide(); // Принудительное скрытие
+                            $('.modal-backdrop').remove(); // Удаление затемнения (если оно не исчезает)
+                            $('body').removeClass('modal-open'); // Сброс состояния тела
+                            $('#registerModal').modal('show'); // Открываем окно регистрации
+                        });
+                    },
+                    error: function () {
+                        $('#loginFormContainer').html('<p class="text-danger">Ошибка загрузки формы входа.</p>');
+                    }
+                });
+            });
+
+            // Загрузка формы регистрации
+            $('#registerModal').on('show.bs.modal', function () {
+                $.ajax({
+                    url: '@Url.Action("Register", "Account")',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#registerFormContainer').html(data);
+
+                        // Привязка обработчика для ссылки "Войти"
+                        $('#toLogin').on('click', function (e) {
+                            e.preventDefault();
+                            $('#registerModal').modal('hide'); // Стандартный метод Bootstrap
+                            $('#registerModal').removeClass('show').hide(); // Принудительное скрытие
+                            $('.modal-backdrop').remove(); // Удаление затемнения (если оно не исчезает)
+                            $('body').removeClass('modal-open'); // Сброс состояния тела
+                            $('#loginModal').modal('show'); // Открываем окно входа
+                        });
+                    },
+                    error: function () {
+                        $('#registerFormContainer').html('<p class="text-danger">Ошибка загрузки формы регистрации.</p>');
+                    }
+                });
+            });
+
+            // Отправка формы входа
+            $(document).on('submit', 'form[asp-action="Login"]', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: form.serialize(),
+                    success: function (result) {
+                        $('#loginFormContainer').html(result);
+                    },
+                    error: function () {
+                        $('#loginFormContainer').html('<p class="text-danger">Ошибка отправки формы входа.</p>');
+                    }
+                });
+            });
+
+            // Отправка формы регистрации
+            $(document).on('submit', 'form[asp-action="Register"]', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: form.serialize(),
+                    success: function (result) {
+                        $('#registerFormContainer').html(result);
+                    },
+                    error: function () {
+                        $('#registerFormContainer').html('<p class="text-danger">Ошибка отправки формы регистрации.</p>');
+                    }
+                });
+            });
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

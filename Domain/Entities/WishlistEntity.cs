@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities
+﻿/*namespace Domain.Entities
 {
     /// <summary>
     /// Список желаемого
@@ -16,10 +16,11 @@
         /// <summary>
         /// Сущность пользователя
         /// </summary>
-        public UserEntity? User { get; set; }
+        public ApplicationUser? User { get; set; }
         /// <summary>
         /// Понравивишиеся игры
         /// </summary>
         public GameEntity[]? GameId { get; set; }
     }
 }
+*/

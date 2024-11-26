@@ -12,7 +12,7 @@
         /// <summary>
         /// Наименование компании
         /// </summary>
-        public string? DeveloperName { get; set; }
+        public string? DeveloperName { get; set; } = default!;
         /// <summary>
         /// Ссылка на официальный сайт
         /// </summary>
@@ -20,6 +20,6 @@
         /// <summary>
         /// Игры выпущенные этим разработчиком
         /// </summary>
-        public GameEntity[]? GameId { get; set; }
+        public List<GameEntity> Games { get; set; } = new List<GameEntity>();
     }
 }

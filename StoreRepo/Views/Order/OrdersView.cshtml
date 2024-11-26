@@ -1,0 +1,258 @@
+﻿@using Contracts.Orders
+@model List<OrdersHistoryDto>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>История заказов</title>
+    <style>
+        .table {
+            border-radius: 10px;
+            overflow: hidden; 
+        }
+
+            .table thead {
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+            }
+
+            .table tbody tr:last-child {
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+    </style>
+</head>
+<body>
+
+    @if (TempData["OrderDeletedSuccess"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+            @TempData["OrderDeletedSuccess"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    else if (TempData["OrderDeletedError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+            @TempData["OrderDeletedError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["OrderEditedSuccess"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+            @TempData["OrderEditedSuccess"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    else if (TempData["OrderEditedError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="z-index: 1050; max-width: 300px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);">
+            @TempData["OrderEditedError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    }
+
+    <div class="container my-4" style="padding-top: 50px;">
+        <h2 class="text-left mb-4">История заказов</h2>
+
+        <!-- Форма для фильтрации и поиска -->
+        <form method="get" asp-controller="Order" asp-action="ShowOrdersHistory" class="row g-3 mb-4">
+        <div class="col-md-6">
+            <label for="searchByName" class="form-label">Поиск по ФИО</label>
+            <input type="text" id="searchByName" name="searchByName" class="form-control" placeholder="Введите ФИО" value="@ViewBag.SearchByName" />
+        </div>
+        <div class="col-md-4">
+            <label for="filterByStatus" class="form-label">Фильтр по статусу</label>
+            <select id="filterByStatus" name="filterByStatus" class="form-select">
+                    @foreach (var status in new[] { "Все", "В обработке", "Ожидание оплаты", "Закрыт" })
+                    {
+                        if (ViewBag.FilterByStatus as string == status)
+                        {
+                            <option value="@status" selected>@status</option>
+                        }
+                        else
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    }
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Применить</button>
+        </div>
+    </form>
+
+        <table class="table table-striped table-bordered shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col" class="text-center">ID заказа</th>
+                    <th scope ="col" class="text-center">ID пользователя</th>
+                    <th scope="col" class="text-center">ФИО пользователя</th>
+                    <th scope="col" class="text-center">Тип оплаты</th>
+                    <th scope="col" class="text-center">Сумма заказа</th>
+                    <th scope="col" class="text-center">Статус заказа</th>
+                    <th scope="col" class="text-center">Дата заказа</th>
+                    <th scope="col" class="text-center">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var order in Model)
+                    {
+                        <tr>
+                            <td class="text-center align-middle">@order.Id</td>
+                            <td class="text-center align-middle">@order.UserId</td>
+                            <td class="text-center align-middle">@order.FullUserName</td>
+                            <td class="text-center align-middle">@order.PaymentType</td>
+                            <td class="text-center align-middle">@order.OrderPrice.ToString("C")</td>
+                            <td class="text-center align-middle">@order.Status</td>
+                            <td class="text-center align-middle">@order.PurchaseDate.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td class="text-center align-middle">
+                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-order-id="@order.Id">
+                                        Удалить
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editOrderModal"
+                                            data-order-id="@order.Id" data-order-fio="@order.FullUserName" data-order-paymentType="@order.PaymentType">
+                                        Редактировать
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center">История заказов пуста</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editOrderModalLabel">Редактировать историю заказа</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editOrderForm" asp-controller="OrdersHistory" asp-action="EditOrderHistory" method="post" onsubmit="return validateRolesSelection()">
+                        <input type="hidden" id="editOrderId" name="OrderId" />
+                        <div class="mb-3">
+                            <label for="editOrderFio" class="form-label">ФИО</label>
+                            <input type="text" class="form-control" id="editOrderFio" name="FIO" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPayMethod">Способ оплаты:</label>
+                            <select id="editPayMethod" name="PaymentType">
+                                <option value="Банковской картой">Банковской картой</option>
+                                <option value="Другой способ оплаты (в разработке)">Другой способ оплаты (в разработке)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editOrderStatus">Статус заказа:</label>
+                            <select id="editOrderStatus" name="Status">
+                                <option value="В обработке">В обработке</option>
+                                <option value="Ожидание оплаты">Ожидание оплаты</option>
+                                <option value="Закрыт">Закрыт</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Модальное окно для подтверждения удаления -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">Подтверждение удаления</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    Вы точно хотите удалить этот заказ?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" asp-controller="OrdersHistory" asp-action="DeleteOrder" method="post" class="d-none">
+                        <input type="hidden" id="orderId" name="orderId" value="" />
+                    </form>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Да</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var deleteButtons = document.querySelectorAll("[data-bs-toggle='modal']");
+
+            deleteButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    var orderId = button.getAttribute("data-order-id");
+                    document.getElementById("orderId").value = orderId; // Устанавливаем ID пользователя в скрытое поле
+                });
+            });
+
+            // Обработчик для кнопки "Да" — отправляет форму
+            document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
+                document.getElementById("deleteForm").submit();  // Отправляем форму на сервер
+            });
+        });
+
+        var editOrderModal = document.getElementById('editOrderModal');
+        editOrderModal.addEventListener('show.bs.modal', function (event) {
+            // Кнопка, вызвавшая модальное окно
+            var button = event.relatedTarget;
+
+            // Получаем данные пользователя из атрибутов кнопки
+            var orderId = button.getAttribute('data-order-id');
+            var orderFio = button.getAttribute('data-order-fio');
+            var paymentType = button.getAttribute('data-order-paymentType');
+            
+
+            // Устанавливаем значения полей в модальном окне
+            document.getElementById('editOrderId').value = orderId;
+            document.getElementById('editOrderFio').value = orderFio;
+            document.getElementById('editPayMethod').value = paymentType;
+        });
+
+        function deleteOrder(orderId){
+            console.log(orderId);
+            fetch('/OrdersHistory/DeleteOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({orderId: orderId})
+            })
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+                let alert = document.querySelector('.alert');
+                if (alert) alert.classList.remove('show');
+            }, 5000); // Закрыть через 5 секунд
+        });
+    </script>
+
+</body>
+</html>

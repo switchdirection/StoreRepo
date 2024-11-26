@@ -1,0 +1,236 @@
+﻿@using Contracts.Games
+@model ShortGameList
+
+@{
+    ViewData["Title"] = "Добавление новой игры";
+}
+
+
+
+<div class="container my-5" style="padding-top: 30px;">
+    <h2 class="text-center mb-4">Добавление новой игры</h2>
+
+    <form id="productForm" asp-action="AddGameMethod" method="post" enctype="multipart/form-data" class="p-4 shadow-lg rounded bg-light">
+        <div class="form-group mb-3">
+            <label for="Title" class="form-label">Название товара</label>
+            <input type="text" class="form-control" id="Title" name="Title" asp-for="Title" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Description" class="form-label">Описание</label>
+            <textarea class="form-control" id="Description" name="Description" asp-for="Description" required></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Price" class="form-label">Цена</label>
+            <input type="number" class="form-control" id="Price" name="Price" asp-for="Price" step="0.01" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="StockQuantity" class="form-label">Доступное количество</label>
+            <input type="number" class="form-control" id="StockQuantity" name="StockQuantity" asp-for="StockQuantity" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Rating" class="form-label">Рейтинг</label>
+            <input type="number" class="form-control" id="Rating" name="Rating" asp-for="Rating" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Разработчики</label>
+            <div>
+                @foreach (var developer in ViewBag.Developers)
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="Developer_@developer.Value" name="Developers" value="@developer.Value" />
+                        <label class="form-check-label" for="Developer_@developer.Value">@developer.Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Издатели</label>
+            <div>
+                @foreach (var publisher in ViewBag.Publishers)
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="Publisher_@publisher.Value" name="Publishers" value="@publisher.Value" />
+                        <label class="form-check-label" for="Publisher_@publisher.Value">@publisher.Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Выбор категорий с использованием чекбоксов -->
+        <div class="form-group mb-3">
+            <label class="form-label">Категории</label>
+            <div>
+                @foreach (var category in ViewBag.Categories)
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="Category_@category.Value" name="Categories" value="@category.Value" />
+                        <label class="form-check-label" for="Category_@category.Value">@category.Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Платформы</label>
+            <div>
+                @foreach (var platform in ViewBag.Platforms)
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="Platform_@platform.Value" name="Platforms" value="@platform.Value" />
+                        <label class="form-check-label" for="Platfomr_@platform.Value">@platform.Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="ImageFile" class="form-label">Обложка товара</label>
+            <input type="file" class="form-control" id="ImageFile" name="ImageFile" required />
+        </div>
+
+        <div id="mainImagePreview" class="mb-4"></div>
+
+        <div class="form-group mb-4">
+            <label for="ImageFiles" class="form-label">Дополнительные изображения</label>
+            <input type="file" class="form-control" id="ImageFiles" name="ImageFiles" multiple />
+        </div>
+
+        <div id="imagePreviews" class="d-flex flex-wrap gap-3"></div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100 shadow">Добавить игру</button>
+    </form>
+</div>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            let alert = document.querySelector('.alert');
+            if (alert) alert.classList.remove('show');
+        }, 5000); // Закрыть через 5 секунд
+    });
+
+    // Главное изображение
+    document.getElementById('ImageFile').addEventListener('change', function () {
+        const file = this.files[0];
+        const formData = new FormData();
+        formData.append('ImageFiles', file);
+
+        fetch('@Url.Action("UploadImages", "Images")', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                const mainImagePreview = document.getElementById('mainImagePreview');
+                mainImagePreview.innerHTML = '';
+
+                const imgContainer = document.createElement('div');
+                imgContainer.classList.add('position-relative', 'd-inline-block', 'm-2', 'border', 'rounded');
+                imgContainer.style.width = '150px';
+
+                const imgElement = document.createElement('img');
+                imgElement.src = data[0] + '?t=' + new Date().getTime(); 
+                imgElement.classList.add('img-fluid', 'rounded');
+                imgElement.style.width = '100%';
+                imgContainer.appendChild(imgElement);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'X';
+                deleteButton.classList.add('position-absolute', 'top-0', 'end-0', 'btn', 'btn-danger', 'btn-sm', 'rounded-circle');
+                deleteButton.style.transform = 'translate(50%, -50%)';
+                deleteButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    if (confirm('Вы уверены что хотите удалить изображение?')) {
+                        fetch('@Url.Action("DeleteImage", "Images")', {
+                            method: 'POST',
+                            body: JSON.stringify({ imageUrl: data[0] }),
+                            headers: { 'Content-Type': 'application/json' }
+                        }).then(response => {
+                            if (response.ok) {
+                                imgContainer.remove();
+                                document.querySelector(`input[name="ImageUrl"]`).remove();
+                            }
+                        });
+                    }
+                });
+
+                imgContainer.appendChild(deleteButton);
+                mainImagePreview.appendChild(imgContainer);
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'ImageUrl';
+                input.value = data[0];
+                document.getElementById('productForm').appendChild(input);
+            });
+    });
+
+    // Дополнительные изображения
+    document.getElementById('ImageFiles').addEventListener('change', function () {
+        const files = this.files;
+        const formData = new FormData();
+
+        for (let i = 0; i < files.length; i++) {
+            formData.append('ImageFiles', files[i]);
+        }
+
+        fetch('@Url.Action("UploadImages", "Images")', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                const imagePreviews = document.getElementById('imagePreviews');
+                imagePreviews.innerHTML = '';
+
+                data.forEach((url) => {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.classList.add('position-relative', 'd-inline-block', 'm-2', 'border', 'rounded');
+                    imgContainer.style.width = '150px';
+
+                    const imgElement = document.createElement('img');
+                    imgElement.src = url;
+                    imgElement.classList.add('img-fluid', 'rounded');
+                    imgElement.style.width = '100%';
+                    imgContainer.appendChild(imgElement);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'X';
+                    deleteButton.classList.add('position-absolute', 'top-0', 'end-0', 'btn', 'btn-danger', 'btn-sm', 'rounded-circle');
+                    deleteButton.style.transform = 'translate(50%, -50%)';
+                    deleteButton.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        if (confirm('Вы уверены что хотите удалить изображение?')) {
+                            fetch('@Url.Action("DeleteImage", "Images")', {
+                                method: 'POST',
+                                body: JSON.stringify({ imageUrl: url }),
+                                headers: { 'Content-Type': 'application/json' }
+                            }).then(response => {
+                                if (response.ok) {
+                                    imgContainer.remove();
+                                    document.querySelector(`input[name="ImagesUrls"][value="${url}"]`).remove();
+                                }
+                            });
+                        }
+                    });
+
+                    imgContainer.appendChild(deleteButton);
+                    imagePreviews.appendChild(imgContainer);
+
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ImagesUrls';
+                    input.value = url;
+                    document.getElementById('productForm').appendChild(input);
+                });
+            });
+    });
+</script>

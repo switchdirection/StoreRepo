@@ -1,0 +1,31 @@
+.custom-carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    color: #ffffff; 
+    transition: background-color 0.3s ease; 
+}
+
+    .custom-carousel-control:hover {
+        background-color: rgba(0, 0, 0, 0.7); 
+    }
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    font-size: 1.5rem;
+}
+
+.carousel-control-prev.custom-carousel-control {
+    left: 10px;
+}
+
+.carousel-control-next.custom-carousel-control {
+    right: 10px; 
+}

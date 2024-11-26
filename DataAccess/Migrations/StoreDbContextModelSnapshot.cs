@@ -17,20 +17,20 @@ namespace DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("CategoryEntityGameEntity", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("CategoriesCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<int>("GameIdId")
                         .HasColumnType("integer");
 
-                    b.HasKey("CategoryId", "GameIdId");
+                    b.HasKey("CategoriesCategoryId", "GameIdId");
 
                     b.HasIndex("GameIdId");
 
@@ -39,17 +39,145 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DeveloperEntityGameEntity", b =>
                 {
-                    b.Property<int>("DeveloperId")
+                    b.Property<int>("DevelopersDeveloperId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("GameIdId")
+                    b.Property<int>("GamesId")
                         .HasColumnType("integer");
 
-                    b.HasKey("DeveloperId", "GameIdId");
+                    b.HasKey("DevelopersDeveloperId", "GamesId");
 
-                    b.HasIndex("GameIdId");
+                    b.HasIndex("GamesId");
 
                     b.ToTable("DeveloperEntityGameEntity");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicationRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("TelegramChatId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<decimal>("WalletBalance")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.CartEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("userid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CategoryEntity", b =>
@@ -61,11 +189,30 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("CategoryName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("categoryname");
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categoryes");
+                    b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "RPG"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Action RPG"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Rougelike"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.DeveloperEntity", b =>
@@ -77,15 +224,37 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DeveloperId"));
 
                     b.Property<string>("DeveloperName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("developername");
 
                     b.Property<string>("WebsiteUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("url");
 
                     b.HasKey("DeveloperId");
 
-                    b.ToTable("Developers");
+                    b.ToTable("Developers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            DeveloperId = 1,
+                            DeveloperName = "Ubisoft",
+                            WebsiteUrl = "https://www.ubisoft.com/ru-ru/"
+                        },
+                        new
+                        {
+                            DeveloperId = 2,
+                            DeveloperName = "Electronic Arts",
+                            WebsiteUrl = "https://www.ea.com/ru-ru"
+                        },
+                        new
+                        {
+                            DeveloperId = 3,
+                            DeveloperName = "Activision Blizzard",
+                            WebsiteUrl = "https://www.activisionblizzard.com/"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.GameEntity", b =>
@@ -96,24 +265,41 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CartEntityId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<double>("Price")
-                        .HasColumnType("double precision");
+                        .HasColumnType("double precision")
+                        .HasColumnName("price");
 
-                    b.Property<decimal>("Rating")
-                        .HasColumnType("numeric");
+                    b.Property<double>("Rating")
+                        .HasColumnType("double precision")
+                        .HasColumnName("rating");
 
                     b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("releasedate");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Games");
+                    b.HasIndex("CartEntityId");
+
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ImageEntity", b =>
@@ -124,18 +310,52 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ImageId"));
 
-                    b.Property<int?>("GameIdId")
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("GameId")
                         .HasColumnType("integer");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("imageurl");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ImageId");
 
-                    b.HasIndex("GameIdId");
+                    b.HasIndex("GameId");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.NotificationChannel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ApplicationUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("NotificationChannel");
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderEntity", b =>
@@ -147,23 +367,84 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderId"));
 
                     b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("purchasedate");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("numeric")
+                        .HasColumnName("totalorderprice");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.OrdersHistoryEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FullUserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("OrderPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("PaymentType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<int?>("UserIdId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.HasKey("OrderId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserIdId");
+                    b.ToTable("OrderHistory", (string)null);
+                });
 
-                    b.ToTable("Orders");
+            modelBuilder.Entity("Domain.Entities.PasswordResetEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ResetCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PasswordReset");
                 });
 
             modelBuilder.Entity("Domain.Entities.PlatformEntity", b =>
@@ -175,11 +456,35 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PlatformId"));
 
                     b.Property<string>("PlatformName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("platformname");
 
                     b.HasKey("PlatformId");
 
-                    b.ToTable("Platforms");
+                    b.ToTable("Platform", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            PlatformId = 1,
+                            PlatformName = "Windows"
+                        },
+                        new
+                        {
+                            PlatformId = 2,
+                            PlatformName = "XBOX"
+                        },
+                        new
+                        {
+                            PlatformId = 3,
+                            PlatformName = "PlayStation"
+                        },
+                        new
+                        {
+                            PlatformId = 4,
+                            PlatformName = "Android & IOS"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.PublisherEntity", b =>
@@ -191,15 +496,37 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PublisherId"));
 
                     b.Property<string>("PublisherName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("publishername");
 
                     b.Property<string>("WebsiteUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("url");
 
                     b.HasKey("PublisherId");
 
-                    b.ToTable("Publishers");
+                    b.ToTable("Publisher", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            PublisherId = 1,
+                            PublisherName = "Mojang Studios",
+                            WebsiteUrl = "https://www.minecraft.net/en-us/article/meet-mojang-studios"
+                        },
+                        new
+                        {
+                            PublisherId = 2,
+                            PublisherName = "Ubisoft Pune",
+                            WebsiteUrl = "https://www.ubisoft.com/en-us/company/careers/locations/pune"
+                        },
+                        new
+                        {
+                            PublisherId = 3,
+                            PublisherName = "Valve",
+                            WebsiteUrl = "https://www.valvesoftware.com/ru/"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.ReviewEntity", b =>
@@ -214,13 +541,17 @@ namespace DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("rating");
 
                     b.Property<DateTime>("ReviewDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("reviewdate");
 
                     b.Property<string>("ReviewText")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("reviewtext");
 
                     b.Property<int?>("UserIdId")
                         .HasColumnType("integer");
@@ -231,10 +562,55 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserIdId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Review", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserEntity", b =>
+            modelBuilder.Entity("GameEntityOrderEntity", b =>
+                {
+                    b.Property<int>("GamesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrdersOrderId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("GamesId", "OrdersOrderId");
+
+                    b.HasIndex("OrdersOrderId");
+
+                    b.ToTable("GameEntityOrderEntity");
+                });
+
+            modelBuilder.Entity("GameEntityPlatformEntity", b =>
+                {
+                    b.Property<int>("GamesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PlatformsPlatformId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("GamesId", "PlatformsPlatformId");
+
+                    b.HasIndex("PlatformsPlatformId");
+
+                    b.ToTable("GameEntityPlatformEntity");
+                });
+
+            modelBuilder.Entity("GameEntityPublisherEntity", b =>
+                {
+                    b.Property<int>("GamesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PublishersPublisherId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("GamesId", "PublishersPublisherId");
+
+                    b.HasIndex("PublishersPublisherId");
+
+                    b.ToTable("GameEntityPublisherEntity");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,116 +618,106 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
+                    b.Property<string>("ClaimType")
                         .HasColumnType("text");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<string>("Role")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("WalletBalance")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("Wishlistid")
+                    b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Wishlistid")
-                        .IsUnique();
+                    b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.WishlistEntity", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.Property<int>("WishlistId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("WishlistId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.HasKey("WishlistId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Wishlists");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("GameEntityOrderEntity", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.Property<int>("GameIdId")
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
+                    b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasKey("GameIdId", "OrderId");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("GameEntityOrderEntity");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("GameEntityPlatformEntity", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.Property<int>("GameIdId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PlatformId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
-                    b.HasKey("GameIdId", "PlatformId");
+                    b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex("PlatformId");
+                    b.HasIndex("RoleId");
 
-                    b.ToTable("GameEntityPlatformEntity");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("GameEntityPublisherEntity", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<int>("GameIdId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PublisherId")
-                        .HasColumnType("integer");
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
 
-                    b.HasKey("GameIdId", "PublisherId");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
-                    b.HasIndex("PublisherId");
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
 
-                    b.ToTable("GameEntityPublisherEntity");
-                });
+                    b.HasKey("UserId", "LoginProvider", "Name");
 
-            modelBuilder.Entity("GameEntityWishlistEntity", b =>
-                {
-                    b.Property<int>("GameIdId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WishlistId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("GameIdId", "WishlistId");
-
-                    b.HasIndex("WishlistId");
-
-                    b.ToTable("GameEntityWishlistEntity");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("CategoryEntityGameEntity", b =>
                 {
                     b.HasOne("Domain.Entities.CategoryEntity", null)
                         .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CategoriesCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -366,33 +732,60 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Domain.Entities.DeveloperEntity", null)
                         .WithMany()
-                        .HasForeignKey("DeveloperId")
+                        .HasForeignKey("DevelopersDeveloperId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.GameEntity", null)
                         .WithMany()
-                        .HasForeignKey("GameIdId")
+                        .HasForeignKey("GamesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.CartEntity", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", "User")
+                        .WithOne("Cart")
+                        .HasForeignKey("Domain.Entities.CartEntity", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.GameEntity", b =>
+                {
+                    b.HasOne("Domain.Entities.CartEntity", null)
+                        .WithMany("Games")
+                        .HasForeignKey("CartEntityId");
+                });
+
             modelBuilder.Entity("Domain.Entities.ImageEntity", b =>
                 {
-                    b.HasOne("Domain.Entities.GameEntity", "GameId")
+                    b.HasOne("Domain.Entities.GameEntity", "Game")
                         .WithMany("Images")
-                        .HasForeignKey("GameIdId");
+                        .HasForeignKey("GameId");
 
-                    b.Navigation("GameId");
+                    b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("Domain.Entities.NotificationChannel", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany("NotificationChannels")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderEntity", b =>
                 {
-                    b.HasOne("Domain.Entities.UserEntity", "UserId")
+                    b.HasOne("Domain.Entities.ApplicationUser", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("UserIdId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("UserId");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.ReviewEntity", b =>
@@ -401,8 +794,8 @@ namespace DataAccess.Migrations
                         .WithMany("ReviewId")
                         .HasForeignKey("GameIdId");
 
-                    b.HasOne("Domain.Entities.UserEntity", "UserId")
-                        .WithMany("ReviewId")
+                    b.HasOne("Domain.Entities.ApplicationUser", "UserId")
+                        .WithMany("Reviews")
                         .HasForeignKey("UserIdId");
 
                     b.Navigation("GameId");
@@ -410,28 +803,17 @@ namespace DataAccess.Migrations
                     b.Navigation("UserId");
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserEntity", b =>
-                {
-                    b.HasOne("Domain.Entities.WishlistEntity", "Wishlist")
-                        .WithOne("User")
-                        .HasForeignKey("Domain.Entities.UserEntity", "Wishlistid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Wishlist");
-                });
-
             modelBuilder.Entity("GameEntityOrderEntity", b =>
                 {
                     b.HasOne("Domain.Entities.GameEntity", null)
                         .WithMany()
-                        .HasForeignKey("GameIdId")
+                        .HasForeignKey("GamesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.OrderEntity", null)
                         .WithMany()
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("OrdersOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -440,13 +822,13 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Domain.Entities.GameEntity", null)
                         .WithMany()
-                        .HasForeignKey("GameIdId")
+                        .HasForeignKey("GamesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.PlatformEntity", null)
                         .WithMany()
-                        .HasForeignKey("PlatformId")
+                        .HasForeignKey("PlatformsPlatformId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -455,30 +837,83 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Domain.Entities.GameEntity", null)
                         .WithMany()
-                        .HasForeignKey("GameIdId")
+                        .HasForeignKey("GamesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.PublisherEntity", null)
                         .WithMany()
-                        .HasForeignKey("PublisherId")
+                        .HasForeignKey("PublishersPublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GameEntityWishlistEntity", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Domain.Entities.GameEntity", null)
+                    b.HasOne("Domain.Entities.ApplicationRole", null)
                         .WithMany()
-                        .HasForeignKey("GameIdId")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.WishlistEntity", null)
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("WishlistId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("Cart")
+                        .IsRequired();
+
+                    b.Navigation("NotificationChannels");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CartEntity", b =>
+                {
+                    b.Navigation("Games");
                 });
 
             modelBuilder.Entity("Domain.Entities.GameEntity", b =>
@@ -486,18 +921,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("ReviewId");
-                });
-
-            modelBuilder.Entity("Domain.Entities.UserEntity", b =>
-                {
-                    b.Navigation("Orders");
-
-                    b.Navigation("ReviewId");
-                });
-
-            modelBuilder.Entity("Domain.Entities.WishlistEntity", b =>
-                {
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

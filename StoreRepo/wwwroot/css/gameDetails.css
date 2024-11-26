@@ -1,0 +1,15 @@
+.min-vh-100 {
+    min-height: 100vh;
+}
+
+.card {
+    border-radius: 8px;
+}
+
+.btn-primary {
+    transition: background-color 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }

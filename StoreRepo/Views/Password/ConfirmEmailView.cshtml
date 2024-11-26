@@ -1,0 +1,20 @@
+﻿<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+        <h5 class="card-title text-center mb-4">Сброс пароля</h5>
+        <form asp-controller="Password" asp-action="ResetPassword">
+            <p class="text-center mb-3">
+                На email, который вы ввели, было отправлено письмо с кодом для сброса пароля. Введите его в поле ниже:
+            </p>
+            <div class="mb-3">
+                <label for="confirmCode" class="form-label">Код подтверждения</label>
+                <input type="text"
+                       id="confirmCode"
+                       name="resetCode"
+                       class="form-control"
+                       placeholder="Введите код"
+                       required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Подтвердить</button>
+        </form>
+    </div>
+</div>

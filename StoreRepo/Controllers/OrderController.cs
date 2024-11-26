@@ -46,12 +46,15 @@ namespace StoreRepo.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmOrder([FromBody] AddOrderRequest request, CancellationToken cancellation)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if(request == null)
+            if (request == null)
             {
                 return BadRequest("Не предоставленны данные для подтверждения заказа");
             }
+
+            var user = await _userManager.GetUserAsync(User);
+
             _emailService.SendMailToBuyer(request, user);
+            
             var result = await _orderService.AddOrderAsync(user.Id, request, cancellation);
             if (result)
             {
